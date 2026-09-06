@@ -74,7 +74,7 @@ export function GlobalSearch() {
   const showHistory = query.trim() === '' && history.length > 0;
 
   return (
-    <div className="relative w-full max-w-xl mx-auto flex items-center justify-center z-50 pt-6" ref={containerRef}>
+    <div className="relative w-full flex items-center justify-center z-50" ref={containerRef}>
       <div className={`relative w-full flex items-center bg-zinc-900 border border-white/10 rounded-full shadow-lg transition-all ${isOpen ? 'ring-2 ring-emerald-500/50' : ''}`}>
         <Search className="absolute left-4 w-5 h-5 text-white/40" />
         <input 

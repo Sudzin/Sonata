@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+const fs = require('fs');
+
+const content = `import React, { useState, useEffect } from "react";
 import { Music, FolderOpen, Play, Search, Library, Disc, Sparkles, Settings2, User, Settings, X, ChevronDown, LogOut, LogIn, BarChart } from "lucide-react";
 import { usePlayer, PlayerProvider } from "./context/PlayerContext";
 import { LibraryView } from "./components/Library";
@@ -30,7 +32,7 @@ function SettingsModal({ onClose, setActiveTab, user }: { onClose: () => void, s
           
           {/* Profile Block */}
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-white/60">{t.account}</label>
+            <label className="text-sm font-medium text-white/60">Аккаунт</label>
             <div className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between">
               <div className="flex items-center gap-3 truncate">
                 <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
@@ -81,13 +83,13 @@ function SettingsModal({ onClose, setActiveTab, user }: { onClose: () => void, s
             {isOpen && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-800 border border-white/10 rounded-xl overflow-hidden shadow-xl z-10 animate-in fade-in slide-in-from-top-2">
                 <div 
-                  className={`px-4 py-3 cursor-pointer transition-colors ${language === 'en' ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'}`}
+                  className={\`px-4 py-3 cursor-pointer transition-colors \${language === 'en' ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'}\`}
                   onClick={() => { setLanguage('en'); setIsOpen(false); }}
                 >
                   {t.english}
                 </div>
                 <div 
-                  className={`px-4 py-3 cursor-pointer transition-colors ${language === 'ru' ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'}`}
+                  className={\`px-4 py-3 cursor-pointer transition-colors \${language === 'ru' ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'}\`}
                   onClick={() => { setLanguage('ru'); setIsOpen(false); }}
                 >
                   {t.russian}
@@ -121,71 +123,72 @@ function MainLayout() {
   }, [setLibrary]);
 
   return (
-    <div className="h-screen w-full flex bg-zinc-950 text-white overflow-hidden selection:bg-emerald-500/30">
-      {/* Sidebar */}
-      <div className="w-64 flex flex-col bg-zinc-950 border-r border-white/5 z-20">
-        <div className="p-6 flex items-center gap-3">
-           <Music className="w-8 h-8 text-white" />
-           <span className="text-xl font-bold tracking-tight text-white">Sonata</span>
-        </div>
-        <nav className="flex-1 px-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar">
-          <button onClick={() => setActiveTab('library')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${activeTab === 'library' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
-            <Library className="w-5 h-5" />
-            <span className="font-medium">{t.library}</span>
-          </button>
-          <button onClick={() => setActiveTab('albums')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${activeTab === 'albums' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
-            <Disc className="w-5 h-5" />
-            <span className="font-medium">{t.albums}</span>
-          </button>
-          <button onClick={() => setActiveTab('ai')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${activeTab === 'ai' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
-            <Sparkles className="w-5 h-5" />
-            <span className="font-medium">{t.aiPlaylists}</span>
-          </button>
-          <button onClick={() => setActiveTab('eq')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${activeTab === 'eq' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
-            <Settings2 className="w-5 h-5" />
-            <span className="font-medium">{t.equalizer}</span>
-          </button>
-        </nav>
-        
-        <div className="h-24 p-4 border-t border-white/5 flex items-center bg-zinc-950 flex-shrink-0">
-          <div className="w-full px-4 py-3 bg-white/5 rounded-xl flex items-center justify-between border border-white/5">
-            <div className="flex items-center gap-3 truncate">
-              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                <User className="w-4 h-4 text-emerald-400" />
-              </div>
-              <div className="flex flex-col truncate pr-2">
-                <span className="text-sm font-medium text-white truncate">{user ? (user.displayName || user.email?.split('@')[0]) : t.guest}</span>
-                <span className="text-[10px] text-white/40">{user ? 'Google account' : 'Local profile'}</span>
-              </div>
-            </div>
-            <button 
-              onClick={() => setIsSettingsOpen(true)} 
-              className="text-emerald-400 hover:text-emerald-300 transition-colors p-2 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg flex-shrink-0" 
-              title={t.settings}
-            >
-               <Settings className="w-4 h-4" />
+    <div className="h-screen w-full flex flex-col bg-zinc-950 text-white overflow-hidden selection:bg-emerald-500/30">
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <div className="w-64 flex flex-col bg-zinc-950 border-r border-white/5">
+          <div className="p-6 flex items-center gap-3">
+             <Music className="w-8 h-8 text-white" />
+             <span className="text-xl font-bold tracking-tight text-white">Sonata</span>
+          </div>
+          <nav className="flex-1 px-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar">
+            <button onClick={() => setActiveTab('library')} className={\`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors \${activeTab === 'library' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}\`}>
+              <Library className="w-5 h-5" />
+              <span className="font-medium">{t.library}</span>
             </button>
+            <button onClick={() => setActiveTab('albums')} className={\`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors \${activeTab === 'albums' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}\`}>
+              <Disc className="w-5 h-5" />
+              <span className="font-medium">{t.albums}</span>
+            </button>
+            <button onClick={() => setActiveTab('ai')} className={\`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors \${activeTab === 'ai' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}\`}>
+              <Sparkles className="w-5 h-5" />
+              <span className="font-medium">{t.aiPlaylists}</span>
+            </button>
+            <button onClick={() => setActiveTab('eq')} className={\`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors \${activeTab === 'eq' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white hover:bg-white/5'}\`}>
+              <Settings2 className="w-5 h-5" />
+              <span className="font-medium">{t.equalizer}</span>
+            </button>
+          </nav>
+          
+          <div className="p-4 mt-auto">
+            <div className="px-4 py-3 bg-white/5 rounded-xl flex items-center justify-between border border-white/5">
+              <div className="flex items-center gap-3 truncate">
+                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                  <User className="w-4 h-4 text-emerald-400" />
+                </div>
+                <div className="flex flex-col truncate pr-2">
+                  <span className="text-sm font-medium text-white truncate">{user ? (user.displayName || user.email?.split('@')[0]) : t.guest}</span>
+                  <span className="text-[10px] text-white/40">{user ? 'Google account' : 'Local profile'}</span>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsSettingsOpen(true)} 
+                className="text-emerald-400 hover:text-emerald-300 transition-colors p-2 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg flex-shrink-0" 
+                title={t.settings}
+              >
+                 <Settings className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Main View */}
+        <div className="flex-1 flex flex-col relative overflow-hidden">
+          <div className="flex-1 overflow-y-auto bg-zinc-900 relative z-10 custom-scrollbar">
+            {activeTab === "library" && <LibraryView />}
+            {activeTab === "albums" && <AlbumsView />}
+            {activeTab === "ai" && <AIPlaylistView />}
+            {activeTab === "eq" && <EqView />}
+            {activeTab === "stats" && <StatsView stats={stats} library={library} />}
           </div>
         </div>
       </div>
-
-      {/* Right Column (Main View + Player Bar) */}
-      <div className="flex-1 flex flex-col relative overflow-hidden">
-        {/* Main View */}
-        <div className="flex-1 overflow-y-auto bg-zinc-900 relative z-10 custom-scrollbar">
-          {activeTab === "library" && <LibraryView />}
-          {activeTab === "albums" && <AlbumsView />}
-          {activeTab === "ai" && <AIPlaylistView />}
-          {activeTab === "eq" && <EqView />}
-          {activeTab === "stats" && <StatsView stats={stats} library={library} />}
-        </div>
-
-        {/* Player Bar */}
-        <div className="h-24 bg-zinc-950/90 backdrop-blur-xl border-t border-white/5 z-50 flex-shrink-0">
-          <PlayerBar />
-        </div>
-      </div>
       
+      {/* Player Bar */}
+      <div className="h-24 bg-zinc-950/90 backdrop-blur-xl border-t border-white/5 z-50">
+        <PlayerBar />
+      </div>
+
       {isSettingsOpen && <SettingsModal onClose={() => setIsSettingsOpen(false)} setActiveTab={setActiveTab} user={user} />}
     </div>
   )
@@ -198,3 +201,6 @@ export default function App() {
     </PlayerProvider>
   );
 }
+`;
+
+fs.writeFileSync('src/App.tsx', content);
