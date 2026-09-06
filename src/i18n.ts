@@ -45,7 +45,12 @@ export const translations = {
     settings: "Settings",
     language: "Language",
     english: "English",
-    russian: "Русский"
+    russian: "Русский",
+    track: "Track",
+    searchPlaceholder: "What do you want to play?",
+    searchHistory: "Search History",
+    topResults: "Top Results",
+    noResults: "No results found for"
   },
   ru: {
     library: "Медиатека",
@@ -93,7 +98,12 @@ export const translations = {
     settings: "Настройки",
     language: "Язык",
     english: "English",
-    russian: "Русский"
+    russian: "Русский",
+    track: "Трек",
+    searchPlaceholder: "Что хочешь включить?",
+    searchHistory: "История поиска",
+    topResults: "Лучшие результаты",
+    noResults: "Ничего не найдено по запросу"
   }
 };
 

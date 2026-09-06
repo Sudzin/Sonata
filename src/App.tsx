@@ -7,6 +7,7 @@ import { AlbumsView } from "./components/Albums";
 import { StatsView } from "./components/Stats";
 import { AIPlaylistView } from "./components/AIPlaylist";
 import { EqView } from "./components/EqView";
+import { GlobalSearch } from "./components/GlobalSearch";
 import { Library, Disc, Sparkles, Settings2, User, Settings, X, ChevronDown } from "lucide-react";
 import { getAllTracks, getAllStats } from "./lib/db";
 import { PlayStat } from "./types";
@@ -14,6 +15,7 @@ import { Language } from "./i18n";
 
 function SettingsModal({ onClose }: { onClose: () => void }) {
   const { language, setLanguage, t } = usePlayer();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={onClose}>
@@ -26,19 +28,32 @@ function SettingsModal({ onClose }: { onClose: () => void }) {
         </div>
         
         <div className="space-y-6">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 relative">
             <label className="text-sm font-medium text-white/60">{t.language}</label>
-            <div className="relative">
-              <select 
-                value={language} 
-                onChange={(e) => setLanguage(e.target.value as Language)}
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-white/30 transition-colors cursor-pointer"
-              >
-                <option value="en">{t.english}</option>
-                <option value="ru">{t.russian}</option>
-              </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
+            <div 
+              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white flex justify-between items-center cursor-pointer hover:border-white/30 transition-colors"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <span>{language === 'en' ? t.english : t.russian}</span>
+              <ChevronDown className="w-4 h-4 text-white/40" />
             </div>
+            
+            {isOpen && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-800 border border-white/10 rounded-xl overflow-hidden shadow-xl z-10 animate-in fade-in slide-in-from-top-2">
+                <div 
+                  className={`px-4 py-3 cursor-pointer transition-colors ${language === 'en' ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'}`}
+                  onClick={() => { setLanguage('en'); setIsOpen(false); }}
+                >
+                  {t.english}
+                </div>
+                <div 
+                  className={`px-4 py-3 cursor-pointer transition-colors ${language === 'ru' ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'}`}
+                  onClick={() => { setLanguage('ru'); setIsOpen(false); }}
+                >
+                  {t.russian}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -113,6 +128,10 @@ function MainLayout() {
           {/* Top Visualizer - Subtle */}
           <div className="absolute top-0 left-0 right-0 z-0 pointer-events-none">
             <Visualizer />
+          </div>
+          
+          <div className="relative z-20 px-8">
+            <GlobalSearch />
           </div>
           
           <div className="flex-1 overflow-y-auto relative z-10 custom-scrollbar">

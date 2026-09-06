@@ -8,14 +8,9 @@ import { formatTime } from '../lib/utils';
 
 export function LibraryView() {
   const { library, setLibrary, playTrack, currentTrack, t } = usePlayer();
-  const [search, setSearch] = useState("");
   const [isScanning, setIsScanning] = useState(false);
   
-  const filteredLibrary = library.filter(tr => 
-    tr.title.toLowerCase().includes(search.toLowerCase()) ||
-    tr.artist.toLowerCase().includes(search.toLowerCase()) ||
-    tr.album.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredLibrary = library;
   
   const handleSelectFolder = async () => {
     try {
@@ -53,21 +48,11 @@ export function LibraryView() {
   };
 
   return (
-    <div className="p-8 h-full flex flex-col">
+    <div className="px-8 pb-8 h-full flex flex-col pt-4">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-white">{t.library}</h1>
         
         <div className="flex items-center gap-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-            <input 
-              type="text" 
-              placeholder={t.search}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-full text-sm text-white focus:outline-none focus:border-white/30 transition-colors w-64"
-            />
-          </div>
           <button 
             onClick={handleSelectFolder}
             disabled={isScanning}

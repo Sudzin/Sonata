@@ -12,8 +12,9 @@ export const loginWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error signing in with Google", error);
+    alert("Ошибка входа Google: " + (error.message || String(error)));
     throw error;
   }
 };

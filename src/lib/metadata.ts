@@ -22,7 +22,13 @@ export async function extractMetadata(
     if (common.picture && common.picture.length > 0) {
       const picture = common.picture[0];
       const blob = new Blob([picture.data], { type: picture.format });
-      coverArtUrl = URL.createObjectURL(blob);
+      
+      // Convert to base64 Data URL for persistence
+      coverArtUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
       
       try {
         const color = await fac.getColorAsync(coverArtUrl);
