@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useRef } from "r
 import { Track } from "../types";
 import { engine } from "../lib/audio";
 import { updateTrackStat } from "../lib/db";
+import { translations, Language } from "../i18n";
 
 interface PlayerContextType {
   library: Track[];
@@ -13,6 +14,8 @@ interface PlayerContextType {
   duration: number;
   volume: number;
   isShuffled: boolean;
+  language: Language;
+  t: typeof translations['en'];
   
   setLibrary: (tracks: Track[]) => void;
   playTrack: (track: Track, forceQueue?: Track[]) => void;
@@ -22,6 +25,7 @@ interface PlayerContextType {
   seek: (time: number) => void;
   setVolume: (val: number) => void;
   toggleShuffle: () => void;
+  setLanguage: (lang: Language) => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
@@ -35,9 +39,16 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [duration, setDuration] = useState(0);
   const [volume, setVolumeState] = useState(1);
   const [isShuffled, setIsShuffled] = useState(false);
+  const [language, setLanguageState] = useState<Language>(() => 
+    (localStorage.getItem('lang') as Language) || 'ru'
+  );
   
   const currentObjectUrl = useRef<string | null>(null);
   
+  useEffect(() => {
+    localStorage.setItem('lang', language);
+  }, [language]);
+
   useEffect(() => {
     engine.onTimeUpdate = (time, dur) => {
       setCurrentTime(time);
@@ -77,9 +88,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         URL.revokeObjectURL(currentObjectUrl.current);
       }
       
-      // We must get a fresh File from the handle because it might have expired/changed,
-      // and we need to verify permission.
-      // Note: in a real app, you should check verifyPermission() first.
       const file = await track.fileHandle.getFile();
       const url = URL.createObjectURL(file);
       currentObjectUrl.current = url;
@@ -87,7 +95,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       await engine.playTrack(url, true);
       setIsPlaying(true);
       
-      // Update Media Session API
       if ("mediaSession" in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
           title: track.title,
@@ -103,7 +110,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       
     } catch (err) {
       console.error("Failed to play track:", err);
-      // Usually due to permissions, might need to prompt user
     }
   };
 
@@ -137,10 +143,14 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   
   const toggleShuffle = () => {
     setIsShuffled(!isShuffled);
-    // Real implementation would shuffle the remaining queue
+  };
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
   };
 
   const currentTrack = currentTrackIndex !== -1 ? queue[currentTrackIndex] : null;
+  const t = translations[language];
 
   return (
     <PlayerContext.Provider
@@ -154,6 +164,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         duration,
         volume,
         isShuffled,
+        language,
+        t,
         setLibrary,
         playTrack,
         togglePlay,
@@ -161,7 +173,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         prevTrack,
         seek,
         setVolume,
-        toggleShuffle
+        toggleShuffle,
+        setLanguage
       }}
     >
       {children}
@@ -173,4 +186,4 @@ export const usePlayer = () => {
   const ctx = useContext(PlayerContext);
   if (!ctx) throw new Error("usePlayer must be used within PlayerProvider");
   return ctx;
-};
+}

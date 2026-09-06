@@ -20,7 +20,8 @@ export function PlayerBar() {
     volume,
     setVolume,
     isShuffled,
-    toggleShuffle
+    toggleShuffle,
+    t
   } = usePlayer();
   
   const [isDragging, setIsDragging] = useState(false);
@@ -41,7 +42,7 @@ export function PlayerBar() {
   };
 
   return (
-    <div className="h-24 bg-zinc-950/80 backdrop-blur-xl border-t border-white/5 flex items-center px-6 gap-6 relative z-50">
+    <div className="w-full h-full flex items-center px-6 gap-6 relative z-50">
       {/* Track Info */}
       <div className="flex items-center gap-4 w-[30%] min-w-[200px]">
         {currentTrack ? (
@@ -56,8 +57,8 @@ export function PlayerBar() {
               )}
             </div>
             <div className="flex flex-col truncate">
-              <span className="text-sm font-semibold text-white truncate">{currentTrack.title}</span>
-              <span className="text-xs text-white/50 truncate">{currentTrack.artist}</span>
+              <span className="text-sm font-semibold text-white truncate hover:underline cursor-pointer">{currentTrack.title}</span>
+              <span className="text-xs text-white/60 truncate hover:underline cursor-pointer">{currentTrack.artist}</span>
             </div>
           </>
         ) : (
@@ -65,7 +66,7 @@ export function PlayerBar() {
             <div className="w-14 h-14 rounded-md bg-white/5 flex items-center justify-center">
               <ListMusic className="w-6 h-6" />
             </div>
-            <span className="text-sm">No track playing</span>
+            <span className="text-sm">{t.noTrackPlaying}</span>
           </div>
         )}
       </div>
@@ -75,7 +76,7 @@ export function PlayerBar() {
         <div className="flex items-center gap-6">
           <button 
             onClick={toggleShuffle} 
-            className={`transition-colors ${isShuffled ? 'text-white' : 'text-white/40 hover:text-white/80'}`}
+            className={`transition-colors ${isShuffled ? 'text-emerald-400' : 'text-white/40 hover:text-white'}`}
           >
             <Shuffle className="w-4 h-4" />
           </button>
@@ -86,7 +87,7 @@ export function PlayerBar() {
           
           <button 
             onClick={togglePlay}
-            className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform"
+            className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-md"
           >
             {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
           </button>
@@ -95,17 +96,17 @@ export function PlayerBar() {
             <SkipForward className="w-5 h-5 fill-current" />
           </button>
           
-          <button className="text-white/40 hover:text-white/80 transition-colors">
+          <button className="text-white/40 hover:text-white transition-colors">
             <Repeat className="w-4 h-4" />
           </button>
         </div>
         
         {/* Seek Bar */}
         <div className="w-full flex items-center gap-3 text-xs text-white/50 font-mono">
-          <span>{formatTime(displayTime)}</span>
-          <div className="flex-1 h-1.5 bg-white/10 rounded-full relative group">
+          <span className="w-10 text-right">{formatTime(displayTime)}</span>
+          <div className="flex-1 h-1.5 bg-white/10 rounded-full relative group cursor-pointer">
             <div 
-              className="absolute top-0 left-0 h-full bg-white rounded-full pointer-events-none" 
+              className="absolute top-0 left-0 h-full bg-white rounded-full pointer-events-none group-hover:bg-emerald-400 transition-colors" 
               style={{ width: `${progress}%` }}
             />
             <input 
@@ -119,7 +120,7 @@ export function PlayerBar() {
               className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
             />
           </div>
-          <span>{formatTime(duration)}</span>
+          <span className="w-10">{formatTime(duration)}</span>
         </div>
       </div>
 
@@ -129,9 +130,9 @@ export function PlayerBar() {
           <button onClick={() => setVolume(volume === 0 ? 1 : 0)} className="text-white/50 hover:text-white transition-colors">
             {volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
           </button>
-          <div className="flex-1 h-1.5 bg-white/10 rounded-full relative">
+          <div className="flex-1 h-1.5 bg-white/10 rounded-full relative cursor-pointer">
             <div 
-              className="absolute top-0 left-0 h-full bg-white/70 rounded-full pointer-events-none group-hover:bg-white transition-colors" 
+              className="absolute top-0 left-0 h-full bg-white/70 rounded-full pointer-events-none group-hover:bg-emerald-400 transition-colors" 
               style={{ width: `${volume * 100}%` }}
             />
             <input 
