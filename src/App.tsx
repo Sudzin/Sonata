@@ -125,12 +125,12 @@ function MainLayout() {
     <div className="h-screen w-full flex bg-zinc-950 text-white overflow-hidden selection:bg-white/20">
       
       {/* Sidebar (Full Height) */}
-      <div className="w-64 flex-shrink-0 flex flex-col bg-zinc-950 border-r border-white/5 z-20">
+      <div className="w-64 flex-shrink-0 flex flex-col bg-zinc-950 border-r border-white/5 z-20" style={{ WebkitAppRegion: "drag" } as any}>
         <div className="p-6 flex items-center gap-3">
            <Music className="w-8 h-8 text-white" />
            <span className="text-xl font-bold tracking-tight text-white">Sonata</span>
         </div>
-        <nav className="flex-1 px-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 px-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar" style={{ WebkitAppRegion: "no-drag" } as any}>
           <button onClick={() => setActiveTab('library')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-sm transition-colors ${activeTab === 'library' ? 'bg-white text-black' : 'text-white/40 hover:text-white hover:bg-white/5'}`}>
             <Library className="w-5 h-5" />
             <span className="font-medium">{t.library}</span>
@@ -150,7 +150,7 @@ function MainLayout() {
         </nav>
         
         {/* Profile in Sidebar */}
-        <div className="h-24 px-6 border-t border-white/5 bg-zinc-950 flex-shrink-0 flex items-center justify-center">
+        <div className="h-28 px-6 border-t border-white/5 bg-zinc-950 flex-shrink-0 flex items-center justify-center shadow-2xl" style={{ WebkitAppRegion: "no-drag" } as any}>
           <div className="w-full px-4 py-3 bg-white/5 rounded-sm flex items-center justify-between border border-white/5 hover:border-white/10 transition-colors cursor-pointer" onClick={() => setIsSettingsOpen(true)}>
             <div className="flex items-center gap-3 truncate">
               {user?.photoURL ? (
@@ -179,6 +179,8 @@ function MainLayout() {
         <div className="flex-1 flex overflow-hidden">
           {/* Main View */}
           <div className="flex-1 overflow-y-auto bg-zinc-900 relative z-10 custom-scrollbar">
+            {/* Drag region for main area */}
+            <div className="absolute top-0 left-0 right-0 h-8 z-50 pointer-events-none" style={{ WebkitAppRegion: "drag" } as any} />
             {activeTab === "library" && <LibraryView />}
             {activeTab === "albums" && <AlbumsView />}
             {activeTab === "ai" && <AIPlaylistView />}
@@ -186,10 +188,10 @@ function MainLayout() {
             {activeTab === "stats" && <StatsView stats={stats} library={library} />}
           </div>
           
-          {/* Right Sidebar (Always Visible) */}
-          <div className="w-80 flex-shrink-0 bg-zinc-950 border-l border-white/5 flex flex-col z-20">
-            {currentTrack ? (
-              <div className="p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
+          {/* Right Sidebar (Conditionally Visible) */}
+          {currentTrack && (
+            <div className="w-80 flex-shrink-0 bg-zinc-950 border-l border-white/5 flex flex-col z-20">
+              <div className="p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar" style={{ WebkitAppRegion: "no-drag" } as any}>
                  <div className="flex items-center gap-2 text-white/50 mb-2">
                     <Disc className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-wider text-white/50">{t.nowPlaying || "Now Playing"}</span>
@@ -215,24 +217,15 @@ function MainLayout() {
                        <span className="text-white text-right truncate max-w-[140px] font-medium">{currentTrack.genre || "Unknown"}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                       <span className="text-white/40">Duration</span>
+                       <span className="text-white/40">{t.duration || "Duration"}</span>
                        <span className="text-white text-right font-mono font-medium">{Math.floor(currentTrack.duration / 60)}:{String(Math.floor(currentTrack.duration % 60)).padStart(2, '0')}</span>
                     </div>
                  </div>
               </div>
-            ) : (
-              <div className="p-6 flex flex-col gap-6 h-full items-center justify-center text-white/20">
-                 <div className="w-full aspect-square rounded-sm overflow-hidden bg-white/5 border border-white/5 relative flex items-center justify-center opacity-50 shadow-none">
-                    <Music className="w-16 h-16"/>
-                 </div>
-                 <div className="flex flex-col items-center justify-center mt-4">
-                    <p className="text-center text-sm font-medium">{t.noTrackPlaying}</p>
-                 </div>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-        
+
         {/* Player Bar */}
         <div className="h-28 bg-zinc-950 border-t border-white/5 z-50 flex-shrink-0 shadow-2xl">
           <PlayerBar />

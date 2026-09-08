@@ -17,6 +17,11 @@ function createWindow() {
     height: 800,
     title: 'Sonata',
     autoHideMenuBar: true,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#09090b',
+      symbolColor: '#ffffff'
+    },
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true
