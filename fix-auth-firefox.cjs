@@ -1,4 +1,6 @@
-const { app, BrowserWindow, Menu, dialog, session } = require('electron');
+const fs = require('fs');
+
+const mainCode = `const { app, BrowserWindow, Menu, dialog, session } = require('electron');
 const path = require('path');
 
 // --- ГЛАВНЫЙ СЕКРЕТ ОБХОДА GOOGLE AUTH В ELECTRON ---
@@ -63,3 +65,7 @@ app.whenReady().then(createWindow);
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
+`;
+
+fs.writeFileSync('main.cjs', mainCode);
+console.log("main.cjs rewritten with Firefox User-Agent bypass!");
