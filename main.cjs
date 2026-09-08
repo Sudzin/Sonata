@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, dialog, session } = require('electron');
+const { app, BrowserWindow, Menu, dialog, session, ipcMain } = require('electron');
 const path = require('path');
 
 // --- ГЛАВНЫЙ СЕКРЕТ ОБХОДА GOOGLE AUTH В ELECTRON ---
@@ -17,14 +17,12 @@ function createWindow() {
     height: 800,
     title: 'Sonata',
     autoHideMenuBar: true,
-    titleBarStyle: 'hidden',
-    titleBarOverlay: {
-      color: '#09090b',
-      symbolColor: '#ffffff'
-    },
+    frame: false,
+    titleBarStyle: "hidden",
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: true
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.cjs')
     }
   });
 
@@ -41,6 +39,24 @@ function createWindow() {
       }
     };
   });
+
+  
+  ipcMain.on('window-minimize', () => {
+    win.minimize();
+  });
+  
+  ipcMain.on('window-maximize', () => {
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
+  });
+  
+  ipcMain.on('window-close', () => {
+    win.close();
+  });
+
 
   const isDev = !app.isPackaged;
   if (isDev) {

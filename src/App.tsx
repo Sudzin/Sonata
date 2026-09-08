@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Music, FolderOpen, Play, Search, Library, Disc, Sparkles, Settings2, User, Settings, X, ChevronDown, LogOut, LogIn, BarChart } from "lucide-react";
+import { Music, FolderOpen, Play, Search, Library, Disc, Sparkles, Settings2, User, Settings, X, ChevronDown, LogOut, LogIn, BarChart, Minus, Square } from "lucide-react";
 import { usePlayer, PlayerProvider } from "./context/PlayerContext";
 import { LibraryView } from "./components/Library";
 import { AlbumsView } from "./components/Albums";
@@ -179,8 +179,21 @@ function MainLayout() {
         <div className="flex-1 flex overflow-hidden">
           {/* Main View */}
           <div className="flex-1 overflow-y-auto bg-zinc-900 relative z-10 custom-scrollbar">
-            {/* Drag region for main area */}
-            <div className="absolute top-0 left-0 right-0 h-8 z-50 pointer-events-none" style={{ WebkitAppRegion: "drag" } as any} />
+            
+            {/* Custom Titlebar / Window Controls */}
+            <div className="absolute top-0 left-0 right-0 h-8 z-50 flex justify-end" style={{ WebkitAppRegion: "drag" } as any}>
+               <div className="flex items-center h-full" style={{ WebkitAppRegion: "no-drag" } as any}>
+                  <button onClick={() => window.electron?.minimize()} className="w-10 h-full flex items-center justify-center text-white/50 hover:bg-white/10 hover:text-white transition-colors">
+                     <Minus className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => window.electron?.maximize()} className="w-10 h-full flex items-center justify-center text-white/50 hover:bg-white/10 hover:text-white transition-colors">
+                     <Square className="w-3.5 h-3.5" />
+                  </button>
+                  <button onClick={() => window.electron?.close()} className="w-10 h-full flex items-center justify-center text-white/50 hover:bg-red-500 hover:text-white transition-colors">
+                     <X className="w-4 h-4" />
+                  </button>
+               </div>
+            </div>
             {activeTab === "library" && <LibraryView />}
             {activeTab === "albums" && <AlbumsView />}
             {activeTab === "ai" && <AIPlaylistView />}
