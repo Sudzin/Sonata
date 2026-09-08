@@ -2,6 +2,8 @@ import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
+import { fileURLToPath } from "url";
+import fs from "fs";
 
 const app = express();
 const PORT = 3000;
@@ -64,7 +66,21 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist");
+    // Dynamically resolve dist path to support standard Node run & Electron app.asar
+    const currentDir = typeof __dirname !== 'undefined' 
+      ? __dirname 
+      : path.dirname(fileURLToPath(import.meta.url));
+      
+    let distPath = path.join(process.cwd(), "dist");
+    
+    if (fs.existsSync(path.join(currentDir, "index.html"))) {
+      // Electron run from app.asar where __dirname is already dist/
+      distPath = currentDir;
+    } else if (fs.existsSync(path.join(currentDir, "dist", "index.html"))) {
+      // Standard Node build run
+      distPath = path.join(currentDir, "dist");
+    }
+
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
