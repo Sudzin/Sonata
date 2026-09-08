@@ -7,3 +7,12 @@ coverage/
 .env*
 !.env.example
 firebase-applet-config.json
+
+# Electron build outputs
+release/
+out/
+win-unpacked/
+*.exe
+*.dmg
+*.AppImage
+*.asar

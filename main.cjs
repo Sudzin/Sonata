@@ -10,13 +10,35 @@ function createWindow() {
     title: 'Sonata',
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration: false,
+      contextIsolation: true
     }
   });
 
   // Открываем DevTools для перехвата любых ошибок в интерфейсе
+  
+  // Открываем DevTools для перехвата любых ошибок в интерфейсе
   win.webContents.openDevTools();
+
+  // Настройка всплывающих окон (Google OAuth popup)
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    return {
+      action: 'allow',
+      overrideBrowserWindowOptions: {
+        webPreferences: {
+          nodeIntegration: false,
+          contextIsolation: true,
+          webSecurity: true
+        }
+      }
+    };
+  });
+
+  // Добавляем userAgent для всех запросов
+  win.webContents.on('did-create-window', (childWindow) => {
+    childWindow.webContents.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36");
+  });
+
 
   const isDev = !app.isPackaged;
 
@@ -44,7 +66,7 @@ function createWindow() {
   }
 }
 
-app.userAgentFallback = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+app.userAgentFallback = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
