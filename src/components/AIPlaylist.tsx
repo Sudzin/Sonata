@@ -79,7 +79,7 @@ export function AIPlaylistView() {
               <button
                 onClick={handleGenerate}
                 disabled={isGenerating || !prompt.trim() || library.length === 0}
-                className="bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-xl font-bold transition-all disabled:opacity-50 disabled:hover:bg-emerald-500 flex items-center gap-2 shadow-lg hover:shadow-emerald-500/25"
+                className="bg-white/10 hover:bg-white text-black px-8 py-4 rounded-xl font-bold transition-all disabled:opacity-50 disabled:hover:bg-white/10 flex items-center gap-2 shadow-lg hover:shadow-emerald-500/25"
               >
                 {isGenerating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
                 {isGenerating ? t.generating : t.generate}
@@ -117,11 +117,11 @@ export function AIPlaylistView() {
                         <div className="w-full h-full flex items-center justify-center text-white/20"><Music className="w-5 h-5"/></div>
                       )}
                       <div className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity ${isPlaying ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                        <Play className="w-4 h-4 fill-current text-emerald-400" />
+                        <Play className="w-4 h-4 fill-current text-white" />
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className={`font-medium truncate ${isPlaying ? 'text-emerald-400' : 'text-white'}`}>{track.title}</div>
+                      <div className={`font-medium truncate ${isPlaying ? 'text-white' : 'text-white'}`}>{track.title}</div>
                       <div className="text-white/50 text-sm truncate">{track.artist}</div>
                     </div>
                   </div>

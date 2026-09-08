@@ -110,7 +110,7 @@ export function LibraryView() {
             <button 
               onClick={handleSelectFolder}
               disabled={isScanning}
-              className="flex items-center gap-2 px-6 py-3 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white border border-white/10 font-medium rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-50"
             >
               <FolderOpen className="w-5 h-5" />
               {isScanning ? t.scanning : t.addFolder}
@@ -129,7 +129,7 @@ export function LibraryView() {
             </div>
           ) : (
             <div className="flex-1 overflow-y-auto pr-2 space-y-1 custom-scrollbar pb-10">
-              <div className="grid grid-cols-[1fr_2fr_2fr_1fr] px-4 py-2 text-xs font-medium text-white/40 uppercase tracking-wider border-b border-white/5 mb-4">
+              <div className="grid grid-cols-[5fr_3fr_3fr_1fr] px-4 py-2 text-xs font-medium text-white/40 uppercase tracking-wider border-b border-white/5 mb-4">
                 <span>{t.title}</span>
                 <span>{t.artist}</span>
                 <span>{t.album}</span>
@@ -142,7 +142,7 @@ export function LibraryView() {
                   <div 
                     key={track.id}
                     onClick={() => playTrack(track, filteredLibrary)}
-                    className={`grid grid-cols-[1fr_2fr_2fr_1fr] items-center px-4 py-3 rounded-xl cursor-pointer group transition-colors ${isPlaying ? 'bg-white/10' : 'hover:bg-white/5'}`}
+                    className={`grid grid-cols-[5fr_3fr_3fr_1fr] items-center px-4 py-3 rounded-xl cursor-pointer group transition-colors ${isPlaying ? 'bg-white/10' : 'hover:bg-white/5'}`}
                   >
                     <div className="flex items-center gap-4 truncate pr-4">
                       <div className="w-10 h-10 rounded-md bg-white/5 flex-shrink-0 relative overflow-hidden">
@@ -152,10 +152,10 @@ export function LibraryView() {
                           <div className="w-full h-full flex items-center justify-center text-white/20"><Music className="w-5 h-5"/></div>
                         )}
                         <div className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity ${isPlaying ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                          <Play className={`w-4 h-4 fill-current text-emerald-400`} />
+                          <Play className={`w-4 h-4 fill-current text-white`} />
                         </div>
                       </div>
-                      <span className={`font-medium truncate ${isPlaying ? 'text-emerald-400' : 'text-white'}`}>{track.title}</span>
+                      <span className={`font-medium truncate ${isPlaying ? 'text-white' : 'text-white'}`}>{track.title}</span>
                     </div>
                     <div className="text-white/60 truncate pr-4 text-sm">{track.artist}</div>
                     <div className="text-white/60 truncate pr-4 text-sm">{track.album}</div>

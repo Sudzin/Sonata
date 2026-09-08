@@ -84,11 +84,9 @@ export function GlobalSearch() {
           onChange={e => { setQuery(e.target.value); setIsOpen(true); }}
           onFocus={() => setIsOpen(true)}
           placeholder={t.searchPlaceholder}
-          className="w-full bg-transparent text-white placeholder-white/40 pl-12 pr-20 py-3 rounded-full focus:outline-none"
+          className="w-full bg-transparent text-white placeholder-white/40 pl-12 pr-6 py-3 rounded-full focus:outline-none"
         />
-        <div className="absolute right-4 flex items-center gap-2 text-xs font-mono text-white/30 pointer-events-none">
-          <span className="px-1.5 py-0.5 bg-white/5 rounded">Ctrl L</span>
-        </div>
+        
       </div>
 
       {isOpen && (showHistory || results.length > 0 || query.trim() !== '') && (

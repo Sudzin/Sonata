@@ -1,4 +1,61 @@
-import React, { useRef } from 'react';
+const fs = require('fs');
+
+// 1. Fix App.tsx
+let appStr = fs.readFileSync('src/App.tsx', 'utf8');
+
+// Align Profile block height to PlayerBar
+appStr = appStr.replace(
+  /<div className="p-6 border-t border-white\/5 bg-zinc-950 flex-shrink-0">/g,
+  '<div className="h-24 px-6 border-t border-white/5 bg-zinc-950 flex-shrink-0 flex items-center justify-center">'
+);
+
+// Remove the placeholder from Right Sidebar so it only shows when playing
+appStr = appStr.replace(
+  /\{currentTrack \? \([\s\S]*?\) : \([\s\S]*?<div className="flex-1 flex flex-col items-center justify-center p-6 text-white\/20">[\s\S]*?<p className="text-center text-sm font-medium">\{t\.noTrackPlaying\}<\/p>\s*<\/div>\s*\)\}/,
+  `{currentTrack && (
+            <div className="p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
+               <div className="flex items-center gap-2 text-white/50 mb-2">
+                  <Disc className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-white/50">{t.nowPlaying || "Now Playing"}</span>
+               </div>
+               <div className="w-full aspect-square rounded-sm overflow-hidden bg-white/5 border border-white/5 relative shadow-2xl">
+                  {currentTrack.coverArtUrl ? (
+                    <img src={currentTrack.coverArtUrl} className="w-full h-full object-cover" alt="Cover" />
+                  ) : (
+                     <div className="w-full h-full flex items-center justify-center text-white/20"><Music className="w-16 h-16"/></div>
+                  )}
+               </div>
+               <div className="flex flex-col text-center">
+                  <h4 className="text-white font-bold text-xl mb-1">{currentTrack.title}</h4>
+                  <p className="text-white/60 text-base">{currentTrack.artist}</p>
+               </div>
+               <div className="bg-white/5 rounded-sm p-4 flex flex-col gap-3 text-sm mt-2 border border-white/5">
+                  <div className="flex justify-between items-center">
+                     <span className="text-white/40">{t.album || "Album"}</span>
+                     <span className="text-white text-right truncate max-w-[140px] font-medium">{currentTrack.album || "Unknown"}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                     <span className="text-white/40">{t.genre || "Genre"}</span>
+                     <span className="text-white text-right truncate max-w-[140px] font-medium">{currentTrack.genre || "Unknown"}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                     <span className="text-white/40">Duration</span>
+                     <span className="text-white text-right font-mono font-medium">{Math.floor(currentTrack.duration / 60)}:{String(Math.floor(currentTrack.duration % 60)).padStart(2, '0')}</span>
+                  </div>
+               </div>
+            </div>
+          )}`
+);
+fs.writeFileSync('src/App.tsx', appStr);
+
+
+// 2. Fix Library.tsx Grid (give Title more space to prevent early truncation)
+let libStr = fs.readFileSync('src/components/Library.tsx', 'utf8');
+libStr = libStr.replace(/grid-cols-\[1fr_2fr_2fr_1fr\]/g, 'grid-cols-[5fr_3fr_3fr_1fr]');
+fs.writeFileSync('src/components/Library.tsx', libStr);
+
+// 3. Fix PlayerBar.tsx layout
+let pbCode = `import React, { useRef } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Repeat, Repeat1, Shuffle, Music, Settings } from 'lucide-react';
 import { usePlayer } from '../context/PlayerContext';
 import { formatTime } from '../lib/utils';
@@ -47,7 +104,7 @@ export function PlayerBar({ onOpenSettings }: { onOpenSettings: () => void }) {
         <div className="w-1/3 flex items-center justify-center gap-6">
           <button 
              onClick={toggleShuffle} 
-             className={`transition-colors ${isShuffle ? 'text-white' : 'text-white/40 hover:text-white'}`}
+             className={\`transition-colors \${isShuffle ? 'text-white' : 'text-white/40 hover:text-white'}\`}
           >
             <Shuffle className="w-5 h-5" />
           </button>
@@ -79,7 +136,7 @@ export function PlayerBar({ onOpenSettings }: { onOpenSettings: () => void }) {
           
           <button 
              onClick={toggleRepeat} 
-             className={`transition-colors relative ${repeatMode !== 'none' ? 'text-white' : 'text-white/40 hover:text-white'}`}
+             className={\`transition-colors relative \${repeatMode !== 'none' ? 'text-white' : 'text-white/40 hover:text-white'}\`}
           >
             {repeatMode === 'one' ? <Repeat1 className="w-5 h-5" /> : <Repeat className="w-5 h-5" />}
           </button>
@@ -97,7 +154,7 @@ export function PlayerBar({ onOpenSettings }: { onOpenSettings: () => void }) {
                }}>
             <div 
               className="absolute left-0 top-0 bottom-0 bg-white group-hover:bg-white rounded-sm transition-colors"
-              style={{ width: `${volume * 100}%` }}
+              style={{ width: \`\${volume * 100}%\` }}
             />
           </div>
           <div className="w-px h-6 bg-white/10 ml-2" />
@@ -121,7 +178,7 @@ export function PlayerBar({ onOpenSettings }: { onOpenSettings: () => void }) {
           >
             <div 
               className="absolute left-0 top-0 bottom-0 bg-white group-hover:bg-white rounded-sm transition-colors"
-              style={{ width: `${(progress / (duration || 1)) * 100}%` }}
+              style={{ width: \`\${(progress / (duration || 1)) * 100}%\` }}
             />
           </div>
           <span className="w-10">{formatTime(duration)}</span>
@@ -131,3 +188,7 @@ export function PlayerBar({ onOpenSettings }: { onOpenSettings: () => void }) {
     </div>
   );
 }
+`;
+fs.writeFileSync('src/components/PlayerBar.tsx', pbCode);
+
+console.log("All UI tweaks applied successfully!");

@@ -61,7 +61,7 @@ export function EqView() {
             <button
                 className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
                   activePreset === 'custom' 
-                    ? 'bg-emerald-500 text-black' 
+                    ? 'bg-white/10 text-black' 
                     : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
                 }`}
               >
@@ -72,12 +72,12 @@ export function EqView() {
           <div className="flex justify-between items-end h-64 gap-2 md:gap-4 px-2 md:px-8">
             {gains.map((gain, i) => (
               <div key={i} className="flex flex-col items-center h-full gap-4 group">
-                <span className="text-xs text-emerald-400 font-mono font-medium h-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-xs text-white font-mono font-medium h-4 opacity-0 group-hover:opacity-100 transition-opacity">
                   {gain > 0 ? '+' : ''}{gain}
                 </span>
                 <div className="flex-1 relative w-1.5 bg-white/10 rounded-full flex items-end mx-auto">
                    <div 
-                     className={`absolute bottom-0 w-full rounded-full transition-all duration-300 ${gain >= 0 ? 'bg-emerald-400' : 'bg-red-400'}`}
+                     className={`absolute bottom-0 w-full rounded-full transition-all duration-300 ${gain >= 0 ? 'bg-white' : 'bg-red-400'}`}
                      style={{ 
                         height: `${Math.abs(gain) * 4.16}%`,
                         bottom: gain >= 0 ? '50%' : `calc(50% - ${Math.abs(gain) * 4.16}%)`,

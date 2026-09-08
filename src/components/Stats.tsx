@@ -61,14 +61,14 @@ export function StatsView({ stats, library }: StatsProps) {
       </div>
       
       {!user && (
-         <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
+         <div className="bg-white/10/10 border border-emerald-500/30 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
            <div>
-             <h3 className="text-emerald-400 font-bold mb-1">Unlock Cloud Sync</h3>
+             <h3 className="text-white font-bold mb-1">Unlock Cloud Sync</h3>
              <p className="text-white/60 text-sm">Sign in to save your listening history, AI playlists, and equalizer presets across devices.</p>
            </div>
            <button 
              onClick={loginWithGoogle}
-             className="px-6 py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-medium rounded-full whitespace-nowrap transition-colors flex items-center gap-2"
+             className="px-6 py-2 bg-white/10 hover:bg-white text-black font-medium rounded-full whitespace-nowrap transition-colors flex items-center gap-2"
            >
              <LogIn className="w-4 h-4" />
              {t.loginWithGoogle}
@@ -89,11 +89,11 @@ export function StatsView({ stats, library }: StatsProps) {
         </div>
 
         <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/5 border border-emerald-500/20 p-6 rounded-3xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-6 text-emerald-500/20 group-hover:scale-110 transition-transform">
+          <div className="absolute top-0 right-0 p-6 text-white/10 group-hover:scale-110 transition-transform">
             <Activity className="w-16 h-16" />
           </div>
           <div className="relative z-10">
-            <p className="text-emerald-300 text-sm font-medium mb-1 uppercase tracking-wider">{t.totalPlays}</p>
+            <p className="text-white text-sm font-medium mb-1 uppercase tracking-wider">{t.totalPlays}</p>
             <p className="text-4xl font-black text-white">{totalPlays}</p>
           </div>
         </div>
@@ -112,7 +112,7 @@ export function StatsView({ stats, library }: StatsProps) {
 
       {/* Top Tracks */}
       <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-        <BarChart className="w-5 h-5 text-emerald-400" />
+        <BarChart className="w-5 h-5 text-white" />
         {t.topTracks}
       </h2>
       
