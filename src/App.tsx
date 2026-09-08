@@ -153,9 +153,13 @@ function MainLayout() {
         <div className="h-24 px-6 border-t border-white/5 bg-zinc-950 flex-shrink-0 flex items-center justify-center">
           <div className="w-full px-4 py-3 bg-white/5 rounded-sm flex items-center justify-between border border-white/5 hover:border-white/10 transition-colors cursor-pointer" onClick={() => setIsSettingsOpen(true)}>
             <div className="flex items-center gap-3 truncate">
-              <div className="w-8 h-8 rounded-sm bg-white/10 flex items-center justify-center flex-shrink-0">
-                <User className="w-4 h-4 text-white" />
-              </div>
+              {user?.photoURL ? (
+                <img src={user.photoURL} alt="Profile" className="w-8 h-8 rounded-sm flex-shrink-0 object-cover" />
+              ) : (
+                <div className="w-8 h-8 rounded-sm bg-white/10 flex items-center justify-center flex-shrink-0">
+                  <User className="w-4 h-4 text-white" />
+                </div>
+              )}
               <div className="flex flex-col truncate pr-2">
                 <span className="text-sm font-medium text-white truncate">{user ? (user.displayName || user.email?.split('@')[0]) : t.guest}</span>
                 <span className="text-[10px] text-white/40 truncate">{user ? 'Google account' : 'Local profile'}</span>
@@ -230,8 +234,8 @@ function MainLayout() {
         </div>
         
         {/* Player Bar */}
-        <div className="h-24 bg-zinc-950 border-t border-white/5 z-50 flex-shrink-0">
-          <PlayerBar onOpenSettings={() => setIsSettingsOpen(true)} />
+        <div className="h-28 bg-zinc-950 border-t border-white/5 z-50 flex-shrink-0 shadow-2xl">
+          <PlayerBar />
         </div>
       </div>
 

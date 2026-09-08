@@ -14,6 +14,7 @@ interface PlayerContextType {
   duration: number;
   volume: number;
   isShuffled: boolean;
+  repeatMode: 'none' | 'all' | 'one';
   language: Language;
   t: typeof translations['en'];
   
@@ -25,6 +26,7 @@ interface PlayerContextType {
   seek: (time: number) => void;
   setVolume: (val: number) => void;
   toggleShuffle: () => void;
+  toggleRepeat: () => void;
   setLanguage: (lang: Language) => void;
 }
 
@@ -37,8 +39,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolumeState] = useState(1);
+  const [volume, setVolumeState] = useState(() => {
+    const saved = localStorage.getItem('sonata_volume');
+    return saved ? parseFloat(saved) : 1;
+  });
   const [isShuffled, setIsShuffled] = useState(false);
+  const [repeatMode, setRepeatMode] = useState<'none' | 'all' | 'one'>('none');
   const [language, setLanguageState] = useState<Language>(() => 
     (localStorage.getItem('lang') as Language) || 'ru'
   );
@@ -48,6 +54,14 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     localStorage.setItem('lang', language);
   }, [language]);
+
+  useEffect(() => {
+    engine.setVolume(volume);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('sonata_volume', volume.toString());
+  }, [volume]);
 
   useEffect(() => {
     engine.onTimeUpdate = (time, dur) => {
@@ -145,6 +159,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     setIsShuffled(!isShuffled);
   };
 
+  const toggleRepeat = () => {
+    const modes: ('none' | 'all' | 'one')[] = ['none', 'all', 'one'];
+    const idx = modes.indexOf(repeatMode);
+    setRepeatMode(modes[(idx + 1) % modes.length]);
+  };
+
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
   };
@@ -164,6 +184,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         duration,
         volume,
         isShuffled,
+        repeatMode,
         language,
         t,
         setLibrary,
@@ -174,6 +195,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         seek,
         setVolume,
         toggleShuffle,
+        toggleRepeat,
         setLanguage
       }}
     >

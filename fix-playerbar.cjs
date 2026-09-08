@@ -1,4 +1,6 @@
-import React, { useRef } from 'react';
+const fs = require('fs');
+
+const code = `import React, { useRef } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Repeat, Repeat1, Shuffle, Music } from 'lucide-react';
 import { usePlayer } from '../context/PlayerContext';
 import { formatTime } from '../lib/utils';
@@ -48,7 +50,7 @@ export function PlayerBar() {
           <div className="flex items-center justify-center gap-6">
             <button
               onClick={toggleShuffle}
-              className={`transition-colors ${isShuffled ? 'text-white' : 'text-white/40 hover:text-white'}`}
+              className={\`transition-colors \${isShuffled ? 'text-white' : 'text-white/40 hover:text-white'}\`}
             >
               <Shuffle className="w-5 h-5" />
             </button>
@@ -80,7 +82,7 @@ export function PlayerBar() {
             
             <button
               onClick={toggleRepeat}
-              className={`transition-colors relative ${repeatMode !== 'none' ? 'text-white' : 'text-white/40 hover:text-white'}`}
+              className={\`transition-colors relative \${repeatMode !== 'none' ? 'text-white' : 'text-white/40 hover:text-white'}\`}
             >
               {repeatMode === 'one' ? <Repeat1 className="w-5 h-5" /> : <Repeat className="w-5 h-5" />}
             </button>
@@ -96,7 +98,7 @@ export function PlayerBar() {
             >
               <div 
                 className="absolute left-0 top-0 bottom-0 bg-white group-hover:bg-white rounded-full transition-all"
-                style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
+                style={{ width: \`\${(currentTime / (duration || 1)) * 100}%\` }}
               />
             </div>
             <span className="w-10 text-left">{formatTime(duration)}</span>
@@ -115,7 +117,7 @@ export function PlayerBar() {
                }}>
             <div 
               className="absolute left-0 top-0 bottom-0 bg-white group-hover:bg-white rounded-full transition-all"
-              style={{ width: `${volume * 100}%` }}
+              style={{ width: \`\${volume * 100}%\` }}
             />
           </div>
         </div>
@@ -124,3 +126,7 @@ export function PlayerBar() {
     </div>
   );
 }
+`;
+
+fs.writeFileSync('src/components/PlayerBar.tsx', code);
+console.log("PlayerBar updated!");
