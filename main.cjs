@@ -22,7 +22,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.cjs')
+      preload: app.isPackaged ? path.join(process.resourcesPath, 'preload.cjs') : path.join(__dirname, 'preload.cjs')
     }
   });
 

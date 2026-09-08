@@ -23,7 +23,8 @@
     "files": [
       "dist/**/*",
       "main.cjs",
-      "package.json"
+      "package.json",
+      "preload.cjs"
     ],
     "win": {
       "target": [
@@ -31,7 +32,10 @@
         "portable"
       ]
     },
-    "asar": true
+    "asar": true,
+    "extraResources": [
+      "preload.cjs"
+    ]
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
