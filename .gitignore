@@ -16,6 +16,11 @@ win-unpacked/
 *.dmg
 *.AppImage
 *.asar
--e 
+-e
 # AI Agent temporary scripts
 /.ai-scripts
+
+# Temporary files for code review
+tree.txt
+sonata-codebase.txt
+gather.cjs
