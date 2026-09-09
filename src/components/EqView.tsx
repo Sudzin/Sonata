@@ -1,5 +1,6 @@
 import React from 'react';
 import { usePlayer } from '../context/PlayerContext';
+import { useLanguage } from '../context/LanguageContext';
 import { SlidersHorizontal, Settings2 } from 'lucide-react';
 import { GlobalSearch } from './GlobalSearch';
 
@@ -14,7 +15,8 @@ const PRESETS = {
 const FREQUENCIES = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000];
 
 export function EqView() {
-  const { t } = usePlayer();
+  const {  } = usePlayer();
+  const { t } = useLanguage();
   const [activePreset, setActivePreset] = React.useState('flat');
   const [gains, setGains] = React.useState<number[]>(PRESETS.flat);
 

@@ -3,6 +3,7 @@ import { PlayStat, Track } from '../types';
 import { formatTime } from '../lib/utils';
 import { BarChart, Activity, Clock, Trophy, Music, User, LogIn, LogOut, ChevronDown, ChevronUp } from 'lucide-react';
 import { usePlayer } from '../context/PlayerContext';
+import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../hooks/useAuth';
 import { loginWithGoogle, logout, auth } from '../lib/firebase';
 import { GlobalSearch } from './GlobalSearch';
@@ -13,7 +14,8 @@ interface StatsProps {
 }
 
 export function StatsView({ stats, library }: StatsProps) {
-  const { t } = usePlayer();
+  const {  } = usePlayer();
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [expandedTrackId, setExpandedTrackId] = useState<string | null>(null);
   

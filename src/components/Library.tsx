@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Track } from '../types';
 import { usePlayer } from '../context/PlayerContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Play, FolderOpen, Music, AlertCircle } from 'lucide-react';
 import { extractMetadata } from '../lib/metadata';
 import { saveTracks, clearTracks, saveSetting, getSetting } from '../lib/db';
@@ -8,7 +9,8 @@ import { formatTime } from '../lib/utils';
 import { GlobalSearch } from './GlobalSearch';
 
 export function LibraryView() {
-  const { library, setLibrary, playTrack, currentTrack, t } = usePlayer();
+  const { library, setLibrary, playTrack, currentTrack } = usePlayer();
+  const { t } = useLanguage();
   const [isScanning, setIsScanning] = useState(false);
   const [dirHandle, setDirHandle] = useState<FileSystemDirectoryHandle | null>(null);
   const [needsPermission, setNeedsPermission] = useState(false);

@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState, useRef } from "r
 import { Track } from "../types";
 import { engine } from "../lib/audio";
 import { updateTrackStat } from "../lib/db";
-import { translations, Language } from "../i18n";
 
 interface PlayerContextType {
   library: Track[];
@@ -15,8 +14,6 @@ interface PlayerContextType {
   volume: number;
   isShuffled: boolean;
   repeatMode: 'none' | 'all' | 'one';
-  language: Language;
-  t: typeof translations['en'];
   
   setLibrary: (tracks: Track[]) => void;
   playTrack: (track: Track, forceQueue?: Track[]) => void;
@@ -27,7 +24,6 @@ interface PlayerContextType {
   setVolume: (val: number) => void;
   toggleShuffle: () => void;
   toggleRepeat: () => void;
-  setLanguage: (lang: Language) => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
@@ -45,16 +41,9 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   });
   const [isShuffled, setIsShuffled] = useState(false);
   const [repeatMode, setRepeatMode] = useState<'none' | 'all' | 'one'>('none');
-  const [language, setLanguageState] = useState<Language>(() => 
-    (localStorage.getItem('lang') as Language) || 'ru'
-  );
   
   const currentObjectUrl = useRef<string | null>(null);
   
-  useEffect(() => {
-    localStorage.setItem('lang', language);
-  }, [language]);
-
   useEffect(() => {
     engine.setVolume(volume);
   }, []);
@@ -165,12 +154,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     setRepeatMode(modes[(idx + 1) % modes.length]);
   };
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-  };
-
   const currentTrack = currentTrackIndex !== -1 ? queue[currentTrackIndex] : null;
-  const t = translations[language];
 
   return (
     <PlayerContext.Provider
@@ -185,8 +169,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         volume,
         isShuffled,
         repeatMode,
-        language,
-        t,
         setLibrary,
         playTrack,
         togglePlay,
@@ -195,8 +177,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         seek,
         setVolume,
         toggleShuffle,
-        toggleRepeat,
-        setLanguage
+        toggleRepeat
       }}
     >
       {children}

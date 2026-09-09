@@ -1,9 +1,11 @@
 import React from 'react';
 import { Disc, Music } from 'lucide-react';
 import { usePlayer } from '../../context/PlayerContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 export function TrackInfoPanel() {
-  const { currentTrack, t } = usePlayer();
+  const { currentTrack } = usePlayer();
+  const { t } = useLanguage();
 
   if (!currentTrack) return null;
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Music, Library, Disc, Sparkles, Settings2 } from 'lucide-react';
 import { usePlayer } from '../../context/PlayerContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface NavigationSidebarProps {
   activeTab: "library" | "albums" | "stats" | "ai" | "eq";
@@ -8,7 +9,8 @@ interface NavigationSidebarProps {
 }
 
 export function NavigationSidebar({ activeTab, setActiveTab }: NavigationSidebarProps) {
-  const { t } = usePlayer();
+  const {  } = usePlayer();
+  const { t } = useLanguage();
 
   return (
     <>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, User, LogOut, LogIn, BarChart, ChevronDown } from 'lucide-react';
 import { usePlayer } from '../../context/PlayerContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { loginWithGoogle, logout, auth } from '../../lib/firebase';
 
 interface SettingsModalProps {
@@ -10,7 +11,7 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ onClose, setActiveTab, user }: SettingsModalProps) {
-  const { language, setLanguage, t } = usePlayer();
+  const { language, setLanguage, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
   return (

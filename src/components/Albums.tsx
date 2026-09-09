@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react';
 import { usePlayer } from '../context/PlayerContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Music, Play } from 'lucide-react';
 import { Track } from '../types';
 import { GlobalSearch } from './GlobalSearch';
 
 export function AlbumsView() {
-  const { library, playTrack, currentTrack, t } = usePlayer();
+  const { library, playTrack, currentTrack } = usePlayer();
+  const { t } = useLanguage();
   
   const albums = useMemo(() => {
     const map = new Map<string, Track[]>();

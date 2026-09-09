@@ -2,10 +2,12 @@ import React from 'react';
 import { User, Settings } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { usePlayer } from '../../context/PlayerContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 export function UserProfile({ onOpenSettings }: { onOpenSettings: () => void }) {
   const { user } = useAuth();
-  const { t } = usePlayer();
+  const {  } = usePlayer();
+  const { t } = useLanguage();
 
   return (
     <div className="h-28 px-6 border-t border-white/5 bg-zinc-950 flex-shrink-0 flex items-center justify-center shadow-2xl" style={{ WebkitAppRegion: "no-drag" } as any}>

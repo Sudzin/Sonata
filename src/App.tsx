@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { usePlayer, PlayerProvider } from "./context/PlayerContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import { LibraryView } from "./components/Library";
 import { AlbumsView } from "./components/Albums";
 import { PlayerBar } from "./components/PlayerBar";
@@ -62,8 +63,10 @@ function MainLayout() {
 
 export default function App() {
   return (
-    <PlayerProvider>
-      <MainLayout />
-    </PlayerProvider>
+    <LanguageProvider>
+      <PlayerProvider>
+        <MainLayout />
+      </PlayerProvider>
+    </LanguageProvider>
   );
 }

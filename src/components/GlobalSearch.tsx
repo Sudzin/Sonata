@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, History, Music, X } from 'lucide-react';
 import { usePlayer } from '../context/PlayerContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Track } from '../types';
 
 export function GlobalSearch() {
-  const { library, playTrack, currentTrack, t } = usePlayer();
+  const { library, playTrack, currentTrack } = usePlayer();
+  const { t } = useLanguage();
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [history, setHistory] = useState<Track[]>([]);

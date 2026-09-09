@@ -1,11 +1,13 @@
 import React, { useRef } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Repeat, Repeat1, Shuffle, Music } from 'lucide-react';
 import { usePlayer } from '../context/PlayerContext';
+import { useLanguage } from '../context/LanguageContext';
 import { formatTime } from '../lib/utils';
 import { useAuth } from '../hooks/useAuth';
 
 export function PlayerBar() {
-  const { currentTrack, isPlaying, togglePlay, currentTime, duration, seek, volume, setVolume, nextTrack, prevTrack, toggleRepeat, toggleShuffle, repeatMode, isShuffled, t } = usePlayer();
+  const { currentTrack, isPlaying, togglePlay, currentTime, duration, seek, volume, setVolume, nextTrack, prevTrack, toggleRepeat, toggleShuffle, repeatMode, isShuffled } = usePlayer();
+  const { t } = useLanguage();
   const { user } = useAuth();
   const progressRef = useRef<HTMLDivElement>(null);
 

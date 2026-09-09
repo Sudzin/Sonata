@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { usePlayer } from '../context/PlayerContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Play, Sparkles, Loader2, Music } from 'lucide-react';
 import { Track } from '../types';
 import { GlobalSearch } from './GlobalSearch';
 
 export function AIPlaylistView() {
-  const { library, playTrack, setQueue, currentTrack, t } = usePlayer();
+  const { library, playTrack, setQueue, currentTrack } = usePlayer();
+  const { t } = useLanguage();
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [playlist, setPlaylist] = useState<Track[]>([]);
