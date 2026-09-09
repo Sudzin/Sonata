@@ -72,6 +72,7 @@ function createWindow() {
 
     try {
       const serverPath = path.join(__dirname, 'dist', 'server.cjs');
+      process.env.HOST = "127.0.0.1";
       require(serverPath);
     } catch (err) {
       dialog.showErrorBox('Ошибка сервера', err.stack || err.message);
