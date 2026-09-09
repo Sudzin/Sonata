@@ -16,7 +16,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 app.post("/api/generate-playlist", async (req, res) => {
   try {
     const { prompt, tracks } = req.body;
-    
+
     if (!prompt) {
       return res.status(400).json({ error: "Prompt is required" });
     }
@@ -38,10 +38,10 @@ app.post("/api/generate-playlist", async (req, res) => {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `You are a music curator AI. The user wants a playlist based on this prompt: "${prompt}".
-      
+
       Here is the user's available local music library (in JSON):
       ${JSON.stringify(availableTracks)}
-      
+
       Return ONLY a JSON array of string IDs that correspond to the tracks you selected for this playlist.
       Ensure the selection accurately reflects the mood/genre/style of the prompt.
       Limit to at most 30 tracks, but ideally 10-20. Do NOT return any markdown formatting, only raw JSON array like ["id1", "id2"].`,
@@ -67,12 +67,12 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     // Dynamically resolve dist path to support standard Node run & Electron app.asar
-    const currentDir = typeof __dirname !== 'undefined' 
-      ? __dirname 
+    const currentDir = typeof __dirname !== 'undefined'
+      ? __dirname
       : path.dirname(fileURLToPath(import.meta.url));
-      
+
     let distPath = path.join(process.cwd(), "dist");
-    
+
     if (fs.existsSync(path.join(currentDir, "index.html"))) {
       // Electron run from app.asar where __dirname is already dist/
       distPath = currentDir;
