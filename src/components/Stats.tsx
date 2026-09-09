@@ -139,7 +139,7 @@ export function StatsView({ stats, library }: StatsProps) {
                   <div className="w-8 text-center font-mono font-bold text-white/30 text-lg">
                     #{index + 1}
                   </div>
-                  <div className="w-12 h-12 rounded-lg bg-white/10 flex-shrink-0 relative overflow-hidden">
+                  <div className="w-12 h-12 rounded-lg bg-white/10 shrink-0 relative overflow-hidden">
                      {track!.coverArtUrl ? (
                        <img src={track!.coverArtUrl} className="w-full h-full object-cover" alt="" />
                      ) : (

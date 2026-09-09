@@ -51,7 +51,7 @@ function MainLayout() {
         </div>
 
         {/* Player Bar */}
-        <div className="h-28 bg-zinc-950 border-t border-white/5 z-50 flex-shrink-0 shadow-2xl">
+        <div className="h-28 bg-zinc-950 border-t border-white/5 z-50 shrink-0 shadow-2xl">
           <PlayerBar />
         </div>
       </div>

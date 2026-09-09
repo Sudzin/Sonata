@@ -114,7 +114,7 @@ export function AIPlaylistView() {
                     onClick={() => playTrack(track, playlist)}
                     className={`flex items-center gap-4 p-3 rounded-xl cursor-pointer group transition-colors ${isPlaying ? 'bg-white/10' : 'hover:bg-white/5'}`}
                   >
-                    <div className="w-12 h-12 rounded-md bg-white/5 flex-shrink-0 relative overflow-hidden">
+                    <div className="w-12 h-12 rounded-md bg-white/5 shrink-0 relative overflow-hidden">
                       {track.coverArtUrl ? (
                         <img src={track.coverArtUrl} className="w-full h-full object-cover" alt="" />
                       ) : (

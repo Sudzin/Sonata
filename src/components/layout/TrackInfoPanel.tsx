@@ -10,7 +10,7 @@ export function TrackInfoPanel() {
   if (!currentTrack) return null;
 
   return (
-    <div className="w-80 flex-shrink-0 bg-zinc-950 border-l border-white/5 flex flex-col z-20">
+    <div className="w-80 shrink-0 bg-zinc-950 border-l border-white/5 flex flex-col z-20">
       <div className="p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar" style={{ WebkitAppRegion: "no-drag" } as any}>
         <div className="flex items-center gap-2 text-white/50 mb-2">
           <Disc className="w-4 h-4" />

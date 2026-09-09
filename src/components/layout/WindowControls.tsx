@@ -3,7 +3,7 @@ import { Minus, Square, X } from 'lucide-react';
 
 export function WindowControls() {
   return (
-    <div className="absolute top-0 left-0 right-0 h-8 z-[100] flex justify-end" style={{ WebkitAppRegion: "drag" } as any}>
+    <div className="w-full h-8 shrink-0 flex justify-end bg-zinc-950 z-[100]" style={{ WebkitAppRegion: "drag" } as any}>
       <div className="flex items-center h-full" style={{ WebkitAppRegion: "no-drag" } as any}>
         <button 
           onClick={() => window.electron?.minimize()} 

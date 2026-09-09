@@ -31,7 +31,7 @@ export function SettingsModal({ onClose, setActiveTab, user }: SettingsModalProp
             <label className="text-sm font-medium text-white/60">{t.account}</label>
             <div className="w-full bg-zinc-900 border border-white/10 rounded-sm px-4 py-3 flex items-center justify-between">
               <div className="flex items-center gap-3 truncate">
-                <div className="w-10 h-10 rounded-sm bg-white/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-sm bg-white/10 flex items-center justify-center shrink-0">
                   <User className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex flex-col truncate pr-2">
@@ -42,7 +42,7 @@ export function SettingsModal({ onClose, setActiveTab, user }: SettingsModalProp
               {auth && (
                 <button 
                   onClick={() => { if(user) logout(); else loginWithGoogle(); }} 
-                  className="text-white hover:text-white transition-colors p-2 bg-white/5 hover:bg-white/10 rounded-sm flex-shrink-0 flex items-center gap-2 text-sm"
+                  className="text-white hover:text-white transition-colors p-2 bg-white/5 hover:bg-white/10 rounded-sm shrink-0 flex items-center gap-2 text-sm"
                 >
                    {user ? <><LogOut className="w-4 h-4" /> {t.logout}</> : <><LogIn className="w-4 h-4" /> Login</>}
                 </button>

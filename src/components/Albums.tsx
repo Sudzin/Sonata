@@ -58,7 +58,7 @@ export function AlbumsView() {
               </div>
               <h3 className={`font-bold truncate ${isPlayingFromAlbum ? 'text-emerald-400' : 'text-white'}`}>{albumName}</h3>
               <p className="text-white/40 text-sm truncate">{coverTrack?.artist}</p>
-              <p className="text-white/30 text-xs mt-1">{tracks.length} tracks</p>
+              <p className="text-white/30 text-xs mt-1">{t.tracksPlural(tracks.length)}</p>
             </div>
           );
         })}

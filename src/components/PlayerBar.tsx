@@ -28,7 +28,7 @@ export function PlayerBar() {
         <div className="flex items-center gap-4 w-1/3 min-w-[200px]">
           {currentTrack ? (
             <>
-              <div className="w-16 h-16 rounded-sm overflow-hidden bg-white/10 flex-shrink-0 shadow-lg">
+              <div className="w-16 h-16 rounded-sm overflow-hidden bg-white/10 shrink-0 shadow-lg">
                 {currentTrack.coverArtUrl ? (
                   <img src={currentTrack.coverArtUrl} className="w-full h-full object-cover" alt="Cover" />
                 ) : (
@@ -64,7 +64,7 @@ export function PlayerBar() {
             
             <button
               onClick={togglePlay}
-              className="w-14 h-14 flex items-center justify-center bg-white rounded-full hover:scale-105 transition-transform flex-shrink-0 shadow-lg"
+              className="w-14 h-14 flex items-center justify-center bg-white rounded-full hover:scale-105 transition-transform shrink-0 shadow-lg"
             >
               {isPlaying ? (
                 <Pause className="w-7 h-7 fill-current text-black" />

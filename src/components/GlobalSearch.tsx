@@ -101,7 +101,7 @@ export function GlobalSearch() {
               <div className="space-y-1">
                 {history.map(track => (
                   <div key={track.id} onClick={() => handlePlay(track)} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer group transition-colors">
-                    <div className="w-12 h-12 bg-white/10 rounded-md overflow-hidden flex-shrink-0">
+                    <div className="w-12 h-12 bg-white/10 rounded-md overflow-hidden shrink-0">
                       {track.coverArtUrl ? (
                         <img src={track.coverArtUrl} alt="" className="w-full h-full object-cover" />
                       ) : (
@@ -137,7 +137,7 @@ export function GlobalSearch() {
               <div className="space-y-1">
                 {results.map(track => (
                   <div key={track.id} onClick={() => handlePlay(track)} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer group transition-colors">
-                    <div className="w-12 h-12 bg-white/10 rounded-md overflow-hidden flex-shrink-0">
+                    <div className="w-12 h-12 bg-white/10 rounded-md overflow-hidden shrink-0">
                       {track.coverArtUrl ? (
                         <img src={track.coverArtUrl} alt="" className="w-full h-full object-cover" />
                       ) : (

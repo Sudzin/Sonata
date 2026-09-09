@@ -147,7 +147,7 @@ export function LibraryView() {
                     className={`grid grid-cols-[5fr_3fr_3fr_1fr] items-center px-4 py-3 rounded-xl cursor-pointer group transition-colors ${isPlaying ? 'bg-white/10' : 'hover:bg-white/5'}`}
                   >
                     <div className="flex items-center gap-4 truncate pr-4">
-                      <div className="w-10 h-10 rounded-md bg-white/5 flex-shrink-0 relative overflow-hidden">
+                      <div className="w-10 h-10 rounded-md bg-white/5 shrink-0 relative overflow-hidden">
                         {track.coverArtUrl ? (
                           <img src={track.coverArtUrl} className="w-full h-full object-cover" alt="" />
                         ) : (
