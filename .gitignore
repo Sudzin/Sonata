@@ -16,3 +16,6 @@ win-unpacked/
 *.dmg
 *.AppImage
 *.asar
+-e 
+# AI Agent temporary scripts
+/.ai-scripts

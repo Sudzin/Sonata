@@ -2,15 +2,20 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
+const isValidConfig = firebaseConfig && firebaseConfig.apiKey;
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-export const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence).catch(console.error);
+export const app = isValidConfig ? initializeApp(firebaseConfig) : null;
+export const db = isValidConfig ? getFirestore(app, firebaseConfig.firestoreDatabaseId) : null;
+export const auth = isValidConfig ? getAuth(app) : null;
+if (auth) { setPersistence(auth, browserLocalPersistence).catch(console.error); }
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 export const loginWithGoogle = async () => {
+  if (!auth) {
+    alert("Firebase не настроен! Зайдите в Настройки (иконка шестеренки сверху справа в AI Studio) и подключите Firebase.");
+    return null;
+  }
   try {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
@@ -22,6 +27,7 @@ export const loginWithGoogle = async () => {
 };
 
 export const logout = async () => {
+  if (!auth) return;
   try {
     await signOut(auth);
   } catch (error) {
