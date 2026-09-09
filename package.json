@@ -24,7 +24,11 @@
       "icon": "assets/icon.icns"
     },
     "win": {
-      "icon": "assets/icon.ico"
+      "icon": "assets/icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ]
     },
     "linux": {
       "icon": "assets/icon.png"
@@ -35,12 +39,6 @@
       "package.json",
       "preload.cjs"
     ],
-    "win": {
-      "target": [
-        "nsis",
-        "portable"
-      ]
-    },
     "asar": true,
     "extraResources": [
       "preload.cjs"
