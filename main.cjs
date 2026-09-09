@@ -63,6 +63,13 @@ function createWindow() {
     win.loadURL('http://127.0.0.1:3000');
   } else {
     process.env.NODE_ENV = 'production';
+    
+    // Перехватываем критические ошибки NodeJS (например занятый порт)
+    process.on('uncaughtException', (err) => {
+      dialog.showErrorBox('Критическая ошибка сервера', `Не удалось запустить сервер. Возможно, порт 3000 занят.\n\n${err.stack || err.message}`);
+      app.quit();
+    });
+
     try {
       const serverPath = path.join(__dirname, 'dist', 'server.cjs');
       require(serverPath);

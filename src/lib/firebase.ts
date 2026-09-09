@@ -1,7 +1,10 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import firebaseConfig from '../../firebase-applet-config.json';
+const configs = import.meta.glob('../../firebase-applet-config.json', { eager: true });
+const configModule = configs['../../firebase-applet-config.json'] as any;
+const firebaseConfig = configModule ? configModule.default : {};
+
 const isValidConfig = firebaseConfig && firebaseConfig.apiKey;
 
 export const app = isValidConfig ? initializeApp(firebaseConfig) : null;
