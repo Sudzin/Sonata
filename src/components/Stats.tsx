@@ -4,7 +4,7 @@ import { formatTime } from '../lib/utils';
 import { BarChart, Activity, Clock, Trophy, Music, User, LogIn, LogOut, ChevronDown, ChevronUp } from 'lucide-react';
 import { usePlayer } from '../context/PlayerContext';
 import { useAuth } from '../hooks/useAuth';
-import { loginWithGoogle, logout } from '../lib/firebase';
+import { loginWithGoogle, logout, auth } from '../lib/firebase';
 import { GlobalSearch } from './GlobalSearch';
 
 interface StatsProps {
@@ -60,15 +60,15 @@ export function StatsView({ stats, library }: StatsProps) {
         <div className="w-1/4 flex justify-end"></div>
       </div>
       
-      {!user && (
-         <div className="bg-white/10/10 border border-emerald-500/30 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      {!user && auth && (
+         <div className="bg-white/10 border border-emerald-500/30 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
            <div>
              <h3 className="text-white font-bold mb-1">Unlock Cloud Sync</h3>
              <p className="text-white/60 text-sm">Sign in to save your listening history, AI playlists, and equalizer presets across devices.</p>
            </div>
            <button 
              onClick={loginWithGoogle}
-             className="px-6 py-2 bg-white/10 hover:bg-white text-black font-medium rounded-full whitespace-nowrap transition-colors flex items-center gap-2"
+             className="px-6 py-2 bg-white/10 hover:bg-white text-white hover:text-black font-medium rounded-full whitespace-nowrap transition-colors flex items-center gap-2"
            >
              <LogIn className="w-4 h-4" />
              {t.loginWithGoogle}

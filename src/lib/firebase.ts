@@ -16,7 +16,7 @@ googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 export const loginWithGoogle = async () => {
   if (!auth) {
-    alert("Firebase не настроен! Зайдите в Настройки (иконка шестеренки сверху справа в AI Studio) и подключите Firebase.");
+    alert("Авторизация недоступна.\nПриложение собрано в автономном режиме без подключения к облаку.");
     return null;
   }
   try {

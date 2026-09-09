@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, User, LogOut, LogIn, BarChart, ChevronDown } from 'lucide-react';
 import { usePlayer } from '../../context/PlayerContext';
-import { loginWithGoogle, logout } from '../../lib/firebase';
+import { loginWithGoogle, logout, auth } from '../../lib/firebase';
 
 interface SettingsModalProps {
   onClose: () => void;
@@ -38,12 +38,14 @@ export function SettingsModal({ onClose, setActiveTab, user }: SettingsModalProp
                   <span className="text-xs text-white/40">{user ? 'Google account' : 'Local profile'}</span>
                 </div>
               </div>
-              <button 
-                onClick={() => { if(user) logout(); else loginWithGoogle(); }} 
-                className="text-white hover:text-white transition-colors p-2 bg-white/5 hover:bg-white/10 rounded-sm flex-shrink-0 flex items-center gap-2 text-sm"
-              >
-                 {user ? <><LogOut className="w-4 h-4" /> {t.logout}</> : <><LogIn className="w-4 h-4" /> Login</>}
-              </button>
+              {auth && (
+                <button 
+                  onClick={() => { if(user) logout(); else loginWithGoogle(); }} 
+                  className="text-white hover:text-white transition-colors p-2 bg-white/5 hover:bg-white/10 rounded-sm flex-shrink-0 flex items-center gap-2 text-sm"
+                >
+                   {user ? <><LogOut className="w-4 h-4" /> {t.logout}</> : <><LogIn className="w-4 h-4" /> Login</>}
+                </button>
+              )}
             </div>
           </div>
 
