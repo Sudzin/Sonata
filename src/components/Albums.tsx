@@ -4,7 +4,7 @@ import { useLibrary } from '../context/LibraryContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Music, Play } from 'lucide-react';
 import { Track } from '../types';
-import { GlobalSearch } from './GlobalSearch';
+import { PageHeader } from './layout/PageHeader';
 
 export function AlbumsView() {
   const { playTrack, currentTrack } = usePlayer();
@@ -31,15 +31,7 @@ export function AlbumsView() {
 
   return (
     <div className="px-8 pb-8 pt-8 h-full overflow-y-auto custom-scrollbar">
-      <div className="flex items-center justify-between mb-8 gap-4">
-        <h1 className="text-3xl font-bold tracking-tight text-white w-1/4">{t.albums}</h1>
-        
-        <div className="flex-1 max-w-xl flex justify-center">
-            <GlobalSearch />
-        </div>
-        
-        <div className="w-1/4 flex justify-end"></div>
-      </div>
+      <PageHeader title={t.albums} />
       
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-24">
         {albums.map(([albumName, tracks]) => {

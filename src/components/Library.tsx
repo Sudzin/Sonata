@@ -110,16 +110,14 @@ export function LibraryView() {
             <GlobalSearch />
         </div>
         
-        <div className="w-1/4 flex justify-end">
-            <button 
+        <div className="w-1/4 flex justify-end"><button 
               onClick={handleSelectFolder}
               disabled={isScanning}
               className="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white border border-white/10 font-medium rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-50"
             >
               <FolderOpen className="w-5 h-5" />
               {isScanning ? t.scanning : t.addFolder}
-            </button>
-        </div>
+            </button></div>
       </div>
       
       <div className="flex flex-1 overflow-hidden">
