@@ -20,6 +20,15 @@
     "directories": {
       "output": "release"
     },
+    "mac": {
+      "icon": "assets/icon.icns"
+    },
+    "win": {
+      "icon": "assets/icon.ico"
+    },
+    "linux": {
+      "icon": "assets/icon.png"
+    },
     "files": [
       "dist/**/*",
       "main.cjs",

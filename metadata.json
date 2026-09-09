@@ -1,5 +1,5 @@
 {
-  "name": "Local Music Player",
+  "name": "Sonata",
   "description": "A modern desktop-style music player for local files.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
