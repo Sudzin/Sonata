@@ -2,9 +2,9 @@ import React, { createContext, useContext, useEffect, useState, useRef } from "r
 import { Track } from "../types";
 import { engine } from "../lib/audio";
 import { updateTrackStat } from "../lib/db";
+import { useLibrary } from "./LibraryContext";
 
 interface PlayerContextType {
-  library: Track[];
   queue: Track[];
   currentTrackIndex: number;
   currentTrack: Track | null;
@@ -15,7 +15,6 @@ interface PlayerContextType {
   isShuffled: boolean;
   repeatMode: 'none' | 'all' | 'one';
   
-  setLibrary: (tracks: Track[]) => void;
   playTrack: (track: Track, forceQueue?: Track[]) => void;
   togglePlay: () => void;
   nextTrack: () => void;
@@ -29,7 +28,7 @@ interface PlayerContextType {
 const PlayerContext = createContext<PlayerContextType | null>(null);
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
-  const [library, setLibrary] = useState<Track[]>([]);
+  const { library } = useLibrary();
   const [queue, setQueue] = useState<Track[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -159,7 +158,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   return (
     <PlayerContext.Provider
       value={{
-        library,
         queue,
         currentTrackIndex,
         currentTrack,
@@ -169,7 +167,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         volume,
         isShuffled,
         repeatMode,
-        setLibrary,
         playTrack,
         togglePlay,
         nextTrack,

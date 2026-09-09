@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { getAllTracks, getAllStats } from '../lib/db';
 import { usePlayer } from '../context/PlayerContext';
+import { useLibrary } from '../context/LibraryContext';
 import { PlayStat } from '../types';
 
 export function useAppInit() {
-  const { setLibrary, library } = usePlayer();
+  const { library, setLibrary } = useLibrary();
   const [stats, setStats] = useState<PlayStat[]>([]);
 
   useEffect(() => {

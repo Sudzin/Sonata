@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react';
 import { usePlayer } from '../context/PlayerContext';
+import { useLibrary } from '../context/LibraryContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Music, Play } from 'lucide-react';
 import { Track } from '../types';
 import { GlobalSearch } from './GlobalSearch';
 
 export function AlbumsView() {
-  const { library, playTrack, currentTrack } = usePlayer();
+  const { playTrack, currentTrack } = usePlayer();
+  const { library } = useLibrary();
   const { t } = useLanguage();
   
   const albums = useMemo(() => {

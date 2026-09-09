@@ -3,6 +3,7 @@ import { PlayStat, Track } from '../types';
 import { formatTime } from '../lib/utils';
 import { BarChart, Activity, Clock, Trophy, Music, User, LogIn, LogOut, ChevronDown, ChevronUp } from 'lucide-react';
 import { usePlayer } from '../context/PlayerContext';
+import { useLibrary } from '../context/LibraryContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../hooks/useAuth';
 import { loginWithGoogle, logout, auth } from '../lib/firebase';
