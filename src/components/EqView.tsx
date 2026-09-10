@@ -2,7 +2,7 @@ import React from 'react';
 import { usePlayer } from '../context/PlayerContext';
 import { useLanguage } from '../context/LanguageContext';
 import { SlidersHorizontal, Settings2 } from 'lucide-react';
-import { GlobalSearch } from './GlobalSearch';
+import { PageHeader } from './layout/PageHeader';
 
 const PRESETS = {
   flat: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -34,15 +34,7 @@ export function EqView() {
 
   return (
     <div className="px-8 pb-8 pt-8 h-full overflow-y-auto custom-scrollbar">
-      <div className="flex items-center justify-between mb-8 gap-4">
-        <h1 className="text-3xl font-bold tracking-tight text-white w-1/4">{t.equalizer}</h1>
-        
-        <div className="flex-1 max-w-xl flex justify-center">
-            <GlobalSearch />
-        </div>
-        
-        <div className="w-1/4 flex justify-end"></div>
-      </div>
+      <PageHeader title={t.equalizer} />
       
       <div className="max-w-4xl mx-auto">
         <div className="bg-zinc-900/50 border border-white/10 rounded-3xl p-8 shadow-2xl">

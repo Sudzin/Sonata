@@ -7,7 +7,7 @@ import { useLibrary } from '../context/LibraryContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../hooks/useAuth';
 import { loginWithGoogle, logout, auth } from '../lib/firebase';
-import { GlobalSearch } from './GlobalSearch';
+import { PageHeader } from './layout/PageHeader';
 
 interface StatsProps {
   stats: PlayStat[];
@@ -53,15 +53,7 @@ export function StatsView({ stats, library }: StatsProps) {
 
   return (
     <div className="px-8 pb-8 pt-8 h-full overflow-y-auto custom-scrollbar">
-      <div className="flex items-center justify-between mb-8 gap-4">
-        <h1 className="text-3xl font-bold tracking-tight text-white w-1/4">{t.profile}</h1>
-        
-        <div className="flex-1 max-w-xl flex justify-center">
-            <GlobalSearch />
-        </div>
-        
-        <div className="w-1/4 flex justify-end"></div>
-      </div>
+      <PageHeader title={t.profile} />
       
       {!user && auth && (
          <div className="bg-white/10 border border-emerald-500/30 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">

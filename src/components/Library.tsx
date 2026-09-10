@@ -7,7 +7,7 @@ import { Play, FolderOpen, Music, AlertCircle } from 'lucide-react';
 import { extractMetadata } from '../lib/metadata';
 import { saveTracks, clearTracks, saveSetting, getSetting } from '../lib/db';
 import { formatTime } from '../lib/utils';
-import { GlobalSearch } from './GlobalSearch';
+import { PageHeader } from './layout/PageHeader';
 
 export function LibraryView() {
   const { playTrack, currentTrack } = usePlayer();
@@ -103,22 +103,19 @@ export function LibraryView() {
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-8 gap-4">
-        <h1 className="text-3xl font-bold tracking-tight text-white w-1/4">{t.library}</h1>
-        
-        <div className="flex-1 max-w-xl flex justify-center">
-            <GlobalSearch />
-        </div>
-        
-        <div className="w-1/4 flex justify-end"><button 
-              onClick={handleSelectFolder}
-              disabled={isScanning}
-              className="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white border border-white/10 font-medium rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-50"
-            >
-              <FolderOpen className="w-5 h-5" />
-              {isScanning ? t.scanning : t.addFolder}
-            </button></div>
-      </div>
+      <PageHeader 
+        title={t.library} 
+        rightSlot={
+          <button 
+            onClick={handleSelectFolder}
+            disabled={isScanning}
+            className="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white border border-white/10 font-medium rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-50"
+          >
+            <FolderOpen className="w-5 h-5" />
+            {isScanning ? t.scanning : t.addFolder}
+          </button>
+        } 
+      />
       
       <div className="flex flex-1 overflow-hidden">
         {/* Left column: List of songs */}

@@ -4,7 +4,7 @@ import { useLibrary } from '../context/LibraryContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Play, Sparkles, Loader2, Music } from 'lucide-react';
 import { Track } from '../types';
-import { GlobalSearch } from './GlobalSearch';
+import { PageHeader } from './layout/PageHeader';
 
 export function AIPlaylistView() {
   const { playTrack, setQueue, currentTrack } = usePlayer();
@@ -52,15 +52,7 @@ export function AIPlaylistView() {
 
   return (
     <div className="px-8 pb-8 pt-8 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-8 gap-4">
-        <h1 className="text-3xl font-bold tracking-tight text-white w-1/4">{t.aiPlaylists}</h1>
-        
-        <div className="flex-1 max-w-xl flex justify-center">
-            <GlobalSearch />
-        </div>
-        
-        <div className="w-1/4 flex justify-end"></div>
-      </div>
+      <PageHeader title={t.aiPlaylists} />
 
       <div className="max-w-3xl mx-auto w-full">
         <div className="bg-gradient-to-br from-emerald-500/20 to-zinc-900/50 p-8 rounded-3xl border border-emerald-500/30 mb-8 relative overflow-hidden">
