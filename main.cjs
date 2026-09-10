@@ -1,4 +1,5 @@
-const { app, BrowserWindow, Menu, dialog, session, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, dialog, session, ipcMain, protocol, net } = require("electron");
+const { pathToFileURL } = require("url");
 const path = require('path');
 const fs = require('fs/promises');
 
@@ -9,6 +10,10 @@ const fs = require('fs/promises');
 // НО! Если мы представимся как FIREFOX, Google применяет совершенно другие 
 // скрипты проверки (без привязки к Chromium), и Electron их успешно проходит!
 app.userAgentFallback = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0";
+
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'sonata-media', privileges: { secure: true, supportFetchAPI: true, bypassCSP: true, stream: true } }
+]);
 
 function createWindow() {
   Menu.setApplicationMenu(null);
@@ -123,7 +128,14 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  protocol.handle('sonata-media', (request) => {
+    const urlPath = request.url.replace(/^sonata-media:\/\//, '');
+    const decodedPath = decodeURIComponent(urlPath);
+    return net.fetch(pathToFileURL(decodedPath).href, { bypassCustomProtocolHandlers: true });
+  });
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
