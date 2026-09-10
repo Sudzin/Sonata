@@ -98,7 +98,7 @@ export function PlayerBar() {
             >
               <div 
                 className="absolute left-0 top-0 bottom-0 bg-white group-hover:bg-white rounded-full transition-all"
-                style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
+                style={{ width: `${Math.min(100, (duration > 0 ? currentTime / duration : 0) * 100)}%` }}
               />
             </div>
             <span className="w-10 text-left">{formatTime(duration)}</span>
