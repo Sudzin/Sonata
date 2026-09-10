@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Track } from '../types';
 
 export function useQueue() {
@@ -11,6 +11,45 @@ export function useQueue() {
   const currentTrack = currentTrackIndex >= 0 && currentTrackIndex < queue.length 
     ? queue[currentTrackIndex] 
     : null;
+
+  // Save state to localStorage whenever it changes
+  useEffect(() => {
+    if (originalQueue.length > 0 || queue.length > 0) {
+      const state = {
+        originalQueue: originalQueue.map(t => t.id),
+        queue: queue.map(t => t.id),
+        currentTrackIndex,
+        isShuffled,
+        repeatMode
+      };
+      localStorage.setItem('sonata_queue_state', JSON.stringify(state));
+    }
+  }, [originalQueue, queue, currentTrackIndex, isShuffled, repeatMode]);
+
+  const restoreQueue = useCallback((library: Track[]) => {
+    const saved = localStorage.getItem('sonata_queue_state');
+    if (saved) {
+      try {
+        const state = JSON.parse(saved);
+        const findTrack = (id: string) => library.find(t => t.id === id);
+        
+        const restoredOriginal = (state.originalQueue || []).map(findTrack).filter(Boolean) as Track[];
+        const restoredQueue = (state.queue || []).map(findTrack).filter(Boolean) as Track[];
+        
+        if (restoredQueue.length > 0) {
+          setOriginalQueue(restoredOriginal);
+          setQueueState(restoredQueue);
+          setIsShuffled(state.isShuffled || false);
+          setRepeatMode(state.repeatMode || 'none');
+          setCurrentTrackIndex(state.currentTrackIndex !== undefined ? state.currentTrackIndex : -1);
+          return restoredQueue[state.currentTrackIndex];
+        }
+      } catch (e) {
+        console.error("Failed to restore queue state", e);
+      }
+    }
+    return null;
+  }, []);
 
   const setQueue = useCallback((newQueue: Track[]) => {
     setOriginalQueue(newQueue);
@@ -119,6 +158,7 @@ export function useQueue() {
     isShuffled,
     repeatMode,
     setQueue,
+    restoreQueue,
     playItem,
     setCurrentTrackIndex,
     toggleShuffle,

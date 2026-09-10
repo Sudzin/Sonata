@@ -6,18 +6,22 @@ import { PlayStat } from '../types';
 
 export function useAppInit() {
   const { library, setLibrary } = useLibrary();
+  const { restoreSession } = usePlayer();
   const [stats, setStats] = useState<PlayStat[]>([]);
 
   useEffect(() => {
     async function load() {
       const savedTracks = await getAllTracks();
-      if (savedTracks.length > 0) setLibrary(savedTracks);
+      if (savedTracks.length > 0) {
+        setLibrary(savedTracks);
+        restoreSession(savedTracks);
+      }
       
       const savedStats = await getAllStats();
       setStats(savedStats);
     }
     load();
-  }, [setLibrary]);
+  }, []);
 
   return { stats, library };
 }

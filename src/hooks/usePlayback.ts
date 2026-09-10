@@ -3,14 +3,30 @@ import { engine } from '../lib/audio';
 
 export function usePlayback(onTrackEnd: () => void) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [currentTime, setCurrentTime] = useState(() => {
+    const saved = localStorage.getItem('sonata_current_time');
+    return saved ? parseFloat(saved) : 0;
+  });
   const [duration, setDuration] = useState(0);
 
+  const currentTimeRef = useRef(currentTime);
   const onTrackEndRef = useRef(onTrackEnd);
   
   useEffect(() => {
+    currentTimeRef.current = currentTime;
+  }, [currentTime]);
+
+  useEffect(() => {
     onTrackEndRef.current = onTrackEnd;
   }, [onTrackEnd]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      localStorage.setItem('sonata_current_time', currentTimeRef.current.toString());
+    };
+    window.addEventListener('beforeunload', handleUnload);
+    return () => window.removeEventListener('beforeunload', handleUnload);
+  }, []);
 
   useEffect(() => {
     engine.onTimeUpdate = (time, dur) => {

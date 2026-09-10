@@ -26,9 +26,11 @@ interface PlayerContextType {
   toggleShuffle: () => void;
   toggleRepeat: () => void;
   setQueue: (queue: Track[]) => void;
+  restoreSession: (lib: Track[]) => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
+
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const { library } = useLibrary();
@@ -40,6 +42,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     isShuffled,
     repeatMode,
     setQueue,
+    restoreQueue,
     playItem,
     toggleShuffle,
     toggleRepeat,
@@ -130,6 +133,33 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     if (prev) playTrack(prev.track, queue);
   };
 
+  const restoreSession = async (lib: Track[]) => {
+    const track = restoreQueue(lib);
+    if (track) {
+      try {
+        if (currentObjectUrl.current) {
+          URL.revokeObjectURL(currentObjectUrl.current);
+        }
+        
+        const file = await track.fileHandle.getFile();
+        const url = URL.createObjectURL(file);
+        currentObjectUrl.current = url;
+        
+        await engine.playTrack(url, false);
+        
+        const savedTime = localStorage.getItem('sonata_current_time');
+        if (savedTime) {
+          const time = parseFloat(savedTime);
+          if (time > 0) {
+            engine.seek(time);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load restored track:", err);
+      }
+    }
+  };
+
   return (
     <PlayerContext.Provider
       value={{
@@ -149,7 +179,9 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         seek,
         setVolume,
         toggleShuffle,
-        toggleRepeat
+        toggleRepeat,
+        setQueue,
+        restoreSession
       }}
     >
       {children}
