@@ -69,7 +69,7 @@ export const translations = {
     album: "Альбом",
     time: "Длительность",
     noMusic: "Музыка не найдена.",
-    addFolderHint: "Нажмите 'Добавить папку' для сканирования.",
+    addFolderHint: "Нажмите чтобы выбрать каталог с музыкой.",
     scanning: "Сканирование...",
     nowPlaying: "Сейчас играет",
     selectTrack: "Выберите трек для воспроизведения",
