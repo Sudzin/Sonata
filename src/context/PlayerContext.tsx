@@ -3,6 +3,8 @@ import { Track } from "../types";
 import { engine } from "../lib/audio";
 import { updateTrackStat } from "../lib/db";
 import { useLibrary } from "./LibraryContext";
+import { useQueue } from "../hooks/useQueue";
+import { usePlayback } from "../hooks/usePlayback";
 
 interface PlayerContextType {
   queue: Track[];
@@ -23,23 +25,46 @@ interface PlayerContextType {
   setVolume: (val: number) => void;
   toggleShuffle: () => void;
   toggleRepeat: () => void;
+  setQueue: (queue: Track[]) => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const { library } = useLibrary();
-  const [queue, setQueue] = useState<Track[]>([]);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(-1);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  
+  const {
+    queue,
+    currentTrackIndex,
+    currentTrack,
+    isShuffled,
+    repeatMode,
+    setQueue,
+    playItem,
+    toggleShuffle,
+    toggleRepeat,
+    getNextTrack,
+    getPrevTrack
+  } = useQueue();
+
+  const {
+    isPlaying,
+    setIsPlaying,
+    currentTime,
+    duration,
+    togglePlay,
+    seek
+  } = usePlayback(() => {
+    if (currentTrackIndex !== -1 && queue[currentTrackIndex]) {
+      updateTrackStat(queue[currentTrackIndex].id, duration);
+    }
+    nextTrack();
+  });
+
   const [volume, setVolumeState] = useState(() => {
     const saved = localStorage.getItem('sonata_volume');
     return saved ? parseFloat(saved) : 1;
   });
-  const [isShuffled, setIsShuffled] = useState(false);
-  const [repeatMode, setRepeatMode] = useState<'none' | 'all' | 'one'>('none');
   
   const currentObjectUrl = useRef<string | null>(null);
   
@@ -51,25 +76,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('sonata_volume', volume.toString());
   }, [volume]);
 
-  useEffect(() => {
-    engine.onTimeUpdate = (time, dur) => {
-      setCurrentTime(time);
-      setDuration(dur);
-    };
-    engine.onEnded = () => {
-      // Record stat when finished
-      if (currentTrackIndex !== -1 && queue[currentTrackIndex]) {
-        updateTrackStat(queue[currentTrackIndex].id, duration);
-      }
-      nextTrack();
-    };
-    
-    // Check playing state periodically (backup for Media Session API)
-    const int = setInterval(() => {
-      setIsPlaying(engine.isPlaying());
-    }, 500);
-    return () => clearInterval(int);
-  }, [currentTrackIndex, queue, duration]);
 
   const setVolume = (val: number) => {
     setVolumeState(val);
@@ -78,19 +84,14 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const playTrack = async (track: Track, forceQueue?: Track[]) => {
     try {
-      const q = forceQueue || queue.length > 0 ? queue : library;
-      if (forceQueue) setQueue(forceQueue);
-      else if (queue.length === 0) setQueue(library);
-      
-      const idx = (forceQueue || q).findIndex((t) => t.id === track.id);
-      setCurrentTrackIndex(idx !== -1 ? idx : 0);
+      const { track: actualTrack } = playItem(track, forceQueue || (queue.length === 0 ? library : undefined));
       
       // Cleanup previous blob URL
       if (currentObjectUrl.current) {
         URL.revokeObjectURL(currentObjectUrl.current);
       }
       
-      const file = await track.fileHandle.getFile();
+      const file = await actualTrack.fileHandle.getFile();
       const url = URL.createObjectURL(file);
       currentObjectUrl.current = url;
       
@@ -115,45 +116,19 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const togglePlay = () => {
-    engine.togglePlay();
-    setIsPlaying(engine.isPlaying());
-  };
-
   const nextTrack = () => {
-    if (queue.length === 0) return;
-    let nextIdx = currentTrackIndex + 1;
-    if (nextIdx >= queue.length) nextIdx = 0; // loop
-    playTrack(queue[nextIdx], queue);
+    const next = getNextTrack();
+    if (next) playTrack(next.track, queue);
   };
 
   const prevTrack = () => {
-    if (queue.length === 0) return;
     if (currentTime > 3) {
-      engine.seek(0);
+      seek(0);
       return;
     }
-    let prevIdx = currentTrackIndex - 1;
-    if (prevIdx < 0) prevIdx = queue.length - 1;
-    playTrack(queue[prevIdx], queue);
+    const prev = getPrevTrack();
+    if (prev) playTrack(prev.track, queue);
   };
-
-  const seek = (time: number) => {
-    engine.seek(time);
-    setCurrentTime(time);
-  };
-  
-  const toggleShuffle = () => {
-    setIsShuffled(!isShuffled);
-  };
-
-  const toggleRepeat = () => {
-    const modes: ('none' | 'all' | 'one')[] = ['none', 'all', 'one'];
-    const idx = modes.indexOf(repeatMode);
-    setRepeatMode(modes[(idx + 1) % modes.length]);
-  };
-
-  const currentTrack = currentTrackIndex !== -1 ? queue[currentTrackIndex] : null;
 
   return (
     <PlayerContext.Provider
