@@ -32,6 +32,8 @@ declare global {
       minimize: () => void;
       maximize: () => void;
       close: () => void;
+      selectMusicFolder: () => Promise<string | null>;
+      scanMusicFolder: (folderPath: string) => Promise<string[]>;
     };
   }
 }

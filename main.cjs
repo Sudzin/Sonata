@@ -1,5 +1,6 @@
 const { app, BrowserWindow, Menu, dialog, session, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs/promises');
 
 // --- ГЛАВНЫЙ СЕКРЕТ ОБХОДА GOOGLE AUTH В ELECTRON ---
 // Google очень жестко проверяет все Chromium-браузеры. Он ищет специфичные
@@ -55,6 +56,41 @@ function createWindow() {
   
   ipcMain.on('window-close', () => {
     win.close();
+  });
+
+  ipcMain.handle('select-music-folder', async () => {
+    const result = await dialog.showOpenDialog(win, {
+      properties: ['openDirectory']
+    });
+    if (result.canceled) return null;
+    return result.filePaths[0];
+  });
+
+  ipcMain.handle('scan-music-folder', async (event, folderPath) => {
+    const results = [];
+    const validExts = new Set(['.mp3', '.flac', '.wav', '.ogg', '.m4a']);
+    
+    async function scan(dir) {
+      try {
+        const entries = await fs.readdir(dir, { withFileTypes: true });
+        for (const entry of entries) {
+          const fullPath = path.join(dir, entry.name);
+          if (entry.isDirectory()) {
+            await scan(fullPath);
+          } else if (entry.isFile()) {
+            const ext = path.extname(entry.name).toLowerCase();
+            if (validExts.has(ext)) {
+              results.push(fullPath);
+            }
+          }
+        }
+      } catch (err) {
+        console.error(`Error scanning directory ${dir}:`, err);
+      }
+    }
+    
+    await scan(folderPath);
+    return results;
   });
 
 
