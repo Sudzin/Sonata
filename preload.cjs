@@ -5,5 +5,6 @@ contextBridge.exposeInMainWorld('electron', {
   maximize: () => ipcRenderer.send('window-maximize'),
   close: () => ipcRenderer.send('window-close'),
   selectMusicFolder: () => ipcRenderer.invoke('select-music-folder'),
-  scanMusicFolder: (folderPath) => ipcRenderer.invoke('scan-music-folder', folderPath)
+  scanMusicFolder: (folderPath) => ipcRenderer.invoke('scan-music-folder', folderPath),
+  extractMetadata: (filePath) => ipcRenderer.invoke('extract-metadata', filePath)
 });

@@ -3,7 +3,7 @@ import { Track } from '../types';
 import { usePlayer } from '../context/PlayerContext';
 import { useLibrary } from '../context/LibraryContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Play, FolderOpen, Music, AlertCircle } from 'lucide-react';
+import { Play, FolderOpen, Music } from 'lucide-react';
 import { extractMetadata } from '../lib/metadata';
 import { saveTracks, clearTracks, saveSetting, getSetting } from '../lib/db';
 import { formatTime } from '../lib/utils';
@@ -14,94 +14,44 @@ export function LibraryView() {
   const { library, setLibrary } = useLibrary();
   const { t } = useLanguage();
   const [isScanning, setIsScanning] = useState(false);
-  const [dirHandle, setDirHandle] = useState<FileSystemDirectoryHandle | null>(null);
-  const [needsPermission, setNeedsPermission] = useState(false);
   
   const filteredLibrary = library;
 
-  useEffect(() => {
-    getSetting('music_dir').then(async (handle) => {
-      if (handle) {
-        setDirHandle(handle);
-        try {
-          const perm = await handle.queryPermission({ mode: 'read' });
-          if (perm !== 'granted') {
-            setNeedsPermission(true);
-          }
-        } catch (e) {
-          console.error("Permission query failed", e);
-        }
-      }
-    });
-  }, []);
-
-  const restoreAccess = async () => {
-    if (dirHandle) {
-      try {
-        const perm = await dirHandle.requestPermission({ mode: 'read' });
-        if (perm === 'granted') {
-          setNeedsPermission(false);
-        }
-      } catch (e) {
-        console.error("Permission request failed", e);
-      }
-    }
-  };
   
   const handleSelectFolder = async () => {
     try {
-      const handle = await window.showDirectoryPicker();
+      const folderPath = await window.electron!.selectMusicFolder();
+      if (!folderPath) return; // User cancelled
+
       setIsScanning(true);
-      setNeedsPermission(false);
-      setDirHandle(handle);
-      await saveSetting('music_dir', handle);
+      // We don't save handles anymore, we just save the string path
+      await saveSetting('music_dir_path', folderPath);
       
+      const filePaths = await window.electron!.scanMusicFolder(folderPath);
       const tracks: Track[] = [];
       
-      async function scanDir(dirHandle: FileSystemDirectoryHandle, currentPath: string) {
-        for await (const entry of dirHandle.values()) {
-          if (entry.kind === 'file') {
-            const ext = entry.name.split('.').pop()?.toLowerCase();
-            if (['mp3', 'flac', 'wav', 'ogg', 'm4a'].includes(ext || '')) {
-              const fileHandle = entry as FileSystemFileHandle;
-              const metadata = await extractMetadata(fileHandle, `${currentPath}/${entry.name}`);
-              tracks.push(metadata);
-            }
-          } else if (entry.kind === 'directory') {
-            await scanDir(entry as FileSystemDirectoryHandle, `${currentPath}/${entry.name}`);
-          }
+      // Process sequentially to not overload IPC/memory
+      for (const filePath of filePaths) {
+        try {
+          const metadata = await extractMetadata(filePath);
+          tracks.push(metadata);
+        } catch (e) {
+          console.error("Failed to extract metadata for:", filePath, e);
         }
       }
-      
-      await scanDir(handle, handle.name);
       
       await clearTracks();
       await saveTracks(tracks);
       setLibrary(tracks);
       setIsScanning(false);
-      
     } catch (err) {
-      console.error("User cancelled or error scanning:", err);
+      console.error("Error scanning:", err);
       setIsScanning(false);
     }
   };
 
   return (
     <div className="px-8 pb-8 pt-8 h-full flex flex-col">
-      {needsPermission && library.length > 0 && (
-        <div className="bg-amber-500/10 border border-amber-500/50 rounded-xl p-4 mb-8 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-amber-200">
-            <AlertCircle className="w-5 h-5" />
-            <span className="text-sm font-medium">Please restore access to your music folder to play tracks.</span>
-          </div>
-          <button 
-            onClick={restoreAccess}
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black font-medium rounded-lg text-sm transition-colors"
-          >
-            Restore Access
-          </button>
-        </div>
-      )}
 
       <PageHeader title={t.library} />
       

@@ -5,9 +5,10 @@ export interface Track {
   album: string;
   genre: string;
   duration: number; // in seconds
-  relativePath: string;
-  fileHandle: FileSystemFileHandle;
-  coverArtUrl?: string; // object URL to a blob
+  relativePath?: string;
+  filePath?: string; // native path
+  fileHandle?: any; // old web file handle
+  coverArtUrl?: string; // object URL or base64
   dominantColor?: string; // hex color for chameleon UI
 }
 
@@ -34,6 +35,7 @@ declare global {
       close: () => void;
       selectMusicFolder: () => Promise<string | null>;
       scanMusicFolder: (folderPath: string) => Promise<string[]>;
+      extractMetadata: (filePath: string) => Promise<any>;
     };
   }
 }

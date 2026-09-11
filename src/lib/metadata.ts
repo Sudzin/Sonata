@@ -1,37 +1,16 @@
-import * as mm from "music-metadata";
 import { FastAverageColor } from "fast-average-color";
 import { Track } from "../types";
 
 const fac = new FastAverageColor();
 
-export async function extractMetadata(
-  fileHandle: FileSystemFileHandle,
-  relativePath: string
-): Promise<Track> {
-  const file = await fileHandle.getFile();
-  
+export async function extractMetadata(filePath: string): Promise<Track> {
   try {
-    // Note: music-metadata can parse File/Blob directly in the browser
-    const metadata = await mm.parseBlob(file);
-    const format = metadata.format;
-    const common = metadata.common;
+    const metadata = await window.electron!.extractMetadata(filePath);
     
-    let coverArtUrl = undefined;
     let dominantColor = undefined;
-    
-    if (common.picture && common.picture.length > 0) {
-      const picture = common.picture[0];
-      const blob = new Blob([picture.data], { type: picture.format });
-      
-      // Convert to base64 Data URL for persistence
-      coverArtUrl = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
-      });
-      
+    if (metadata.coverArtUrl) {
       try {
-        const color = await fac.getColorAsync(coverArtUrl);
+        const color = await fac.getColorAsync(metadata.coverArtUrl);
         dominantColor = color.hex;
       } catch (err) {
         console.warn("Could not extract dominant color", err);
@@ -39,29 +18,21 @@ export async function extractMetadata(
     }
     
     return {
-      id: relativePath,
-      title: common.title || file.name.replace(/\.[^/.]+$/, ""), // fallback to filename without ext
-      artist: common.artist || "Unknown Artist",
-      album: common.album || "Unknown Album",
-      genre: common.genre && common.genre.length > 0 ? common.genre[0] : "Unknown",
-      duration: format.duration || 0,
-      relativePath,
-      fileHandle,
-      coverArtUrl,
+      ...metadata,
       dominantColor,
+      filePath
     };
   } catch (error) {
-    console.error(`Error parsing metadata for ${file.name}:`, error);
-    // Fallback if parsing fails
+    console.error(`Error parsing metadata for ${filePath}:`, error);
+    const fileName = filePath.split(/[/\\]/).pop() || "Unknown";
     return {
-      id: relativePath,
-      title: file.name.replace(/\.[^/.]+$/, ""),
+      id: filePath,
+      title: fileName.replace(/\.[^/.]+$/, ""),
       artist: "Unknown Artist",
       album: "Unknown Album",
       genre: "Unknown",
       duration: 0,
-      relativePath,
-      fileHandle,
+      filePath,
     };
   }
 }

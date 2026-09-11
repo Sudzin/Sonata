@@ -90,12 +90,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       const { track: actualTrack } = playItem(track, forceQueue || (queue.length === 0 ? library : undefined));
       
       // Cleanup previous blob URL
-      if (currentObjectUrl.current) {
+      if (currentObjectUrl.current && currentObjectUrl.current.startsWith('blob:')) {
         URL.revokeObjectURL(currentObjectUrl.current);
       }
       
-      const file = await actualTrack.fileHandle.getFile();
-      const url = URL.createObjectURL(file);
+      const url = actualTrack.filePath 
+        ? `sonata-media://${actualTrack.filePath}`
+        : ''; // fallback if needed, though shouldn't happen with new flow
       currentObjectUrl.current = url;
       
       await engine.playTrack(url, true);
@@ -137,12 +138,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const track = restoreQueue(lib);
     if (track) {
       try {
-        if (currentObjectUrl.current) {
+        if (currentObjectUrl.current && currentObjectUrl.current.startsWith('blob:')) {
           URL.revokeObjectURL(currentObjectUrl.current);
         }
         
-        const file = await track.fileHandle.getFile();
-        const url = URL.createObjectURL(file);
+        const url = track.filePath 
+          ? `sonata-media://${track.filePath}`
+          : '';
         currentObjectUrl.current = url;
         
         await engine.playTrack(url, false);
